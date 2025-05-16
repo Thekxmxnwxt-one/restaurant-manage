@@ -1,0 +1,40 @@
+
+services:
+  db:
+    image: postgres:15
+    container_name: cook_postgres
+    environment:
+      POSTGRES_DB: "cookdatabase"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "password"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - database_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: cook_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "user@example.com"
+      PGADMIN_DEFAULT_PASSWORD: "user123"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - database_network
+    restart: unless-stopped
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  database_network:

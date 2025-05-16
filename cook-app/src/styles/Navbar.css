@@ -1,0 +1,40 @@
+.navbar {
+  padding: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #1ca4e4;
+  color: white;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  justify-content: flex-start;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar li {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+}
+
+
+.navbar li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+
+.navbar li.active a {
+  color: #00347e;
+}
+
+.navbar li:hover {
+  background-color: #fffdf0;
+  color: #1e3a8a;
+  font-weight: 700;
+}

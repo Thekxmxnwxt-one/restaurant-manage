@@ -1,0 +1,64 @@
+.order-management {
+  padding: 2rem;
+  font-family: 'Prompt', sans-serif;
+  background-color: #f9f9f9;
+}
+
+.order-management h2 {
+  color: #003f7f;
+  margin-bottom: 1.5rem;
+}
+
+.order-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.order-card {
+  background: white;
+  border: 2px solid #dde3f0;
+  border-left: 8px solid #003f7f;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.order-card h3 {
+  margin: 0 0 0.5rem 0;
+  color: #003f7f;
+}
+
+.order-card ul {
+  list-style: none;
+  padding-left: 1rem;
+}
+
+.btn-serve {
+  margin-top: 1rem;
+  background-color: #ffd100;
+  color: #003f7f;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-serve:hover {
+  background-color: #ffcd00;
+}
+
+.status-ready {
+  border-left-color: #ffc107;
+}
+
+.status-cooking {
+  border-left-color: #17a2b8;
+}
+
+.status-served {
+  border-left-color: #28a745;
+  opacity: 0.6;
+}

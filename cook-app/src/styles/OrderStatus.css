@@ -1,0 +1,123 @@
+/* OrderStatus.css */
+
+.order-status-container {
+  padding: 100px 2rem 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.order-status-container h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+}
+
+.order-table {
+  background-color: #ecf0f1;
+  border-left: 6px solid #3498db;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.order-table h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.order-item {
+  padding: 0.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed #bdc3c7;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.order-item strong {
+  color: #34495e;
+}
+
+.order-item.status-ready {
+  background-color: #dff9fb;
+}
+
+.order-item.status-served {
+  background-color: #dcdde1;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-order-serve {
+  padding: 6px 12px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 200px;
+}
+
+.btn-order-serve:hover {
+  background-color: #218838;
+}
+
+
+.btn-serve {
+  background-color: #27ae60;
+  color: white;
+  padding: 6px 12px; /* แคบลง */
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  white-space: nowrap; /* ไม่ให้ขึ้นบรรทัดใหม่ */
+  width: auto;         /* ให้กว้างเท่ากับข้อความ */
+  display: inline-block;
+  transition: background-color 0.2s ease;
+}
+
+
+.btn-serve:hover {
+  background-color: #219150;
+}
+
+.error {
+  color: #e74c3c;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.success {
+  color: #2ecc71;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 600px) {
+  .order-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-serve {
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+}

@@ -1,0 +1,75 @@
+.customer-management {
+  padding: 40px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #0d3b66;
+}
+
+.customer-management h1 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: #0d3b66;
+}
+
+.create-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.create-form input {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  flex: 1;
+}
+
+.create-form button {
+  padding: 10px 16px;
+  background-color: #f4d35e;
+  color: #0d3b66;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.create-form button:hover {
+  background-color: #ffd900;
+}
+
+.customer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.customer-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 16px;
+  border-left: 6px solid #0d3b66;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.customer-card button {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.customer-card button:hover {
+  background-color: #c9302c;
+}
+
+.loading {
+  text-align: center;
+  font-size: 18px;
+}
