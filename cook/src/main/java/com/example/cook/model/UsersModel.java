@@ -11,4 +11,6 @@ public class UsersModel {
     private String password;
     private int employeeId;
     private LocalDateTime createdAt;
+
+    private EmployeesModel employeesModel;
 }

@@ -112,9 +112,6 @@ function KitchenPage() {
   }
 };
 
-
-
-
   if (loading) return <div className="kitchen-page"><p>Loading orders...</p></div>;
   if (error) return <div className="kitchen-page"><p>Error: {error}</p></div>;
 

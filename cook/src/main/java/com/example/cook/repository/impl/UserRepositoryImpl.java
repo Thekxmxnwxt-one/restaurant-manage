@@ -24,7 +24,19 @@ public class UserRepositoryImpl implements UserNativeRepository {
     @Override
     public UsersModel findByUsername(String username) {
 
-        String sql = "SELECT id, username, password, employee_id, created_at FROM users WHERE username = ?";
+        String sql = """ 
+                SELECT 
+                u.id, 
+                u.username, 
+                u.password, 
+                u.employee_id, 
+                u.created_at, 
+                e.name, 
+                e.role 
+                FROM users u 
+                JOIN employees e ON u.employee_id = e.id
+                WHERE username = ?
+             """;
 
         List<UsersModel> result = this.jdbcTemplate.query(
                 sql, new Object[]{username}, new RowMapper<UsersModel>() {
@@ -36,6 +48,13 @@ public class UserRepositoryImpl implements UserNativeRepository {
                         model.setPassword(rs.getString("password"));
                         model.setEmployeeId(rs.getInt("employee_id"));
                         model.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+
+                        EmployeesModel emp = new EmployeesModel();
+                        emp.setName(rs.getString("name"));
+                        emp.setRole(rs.getString("role"));
+
+                        model.setEmployeesModel(emp);
+
                         return model;
                     }
                 }

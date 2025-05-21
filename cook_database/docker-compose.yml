@@ -31,6 +31,22 @@ services:
     restart: unless-stopped
     depends_on:
       - db
+  
+  app:
+    build:
+      context: ../cook             # <<== ระบุว่า Dockerfile อยู่ที่ไหน
+      dockerfile: Dockerfile
+    container_name: cook_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/cookdatabase
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+    networks:
+      - database_network
 
 volumes:
   postgres_data:

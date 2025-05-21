@@ -18,18 +18,22 @@ function Login() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
     });
-    const data = await response.json();
 
-    if (data.status === 200) {
-      const employeeId = data.data.employeeId;
+    if (!response.ok) {
+        setError('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+        return;
+      }
 
-      // ดึงข้อมูล employee เพื่อดู role
-      const empRes = await fetch(`http://localhost:8080/api/employee/${employeeId}`);
-      const empData = await empRes.json();
+     const data = await response.json();
 
-      if (empData.status === 200) {
-        const role = empData.data.role; // สมมติว่า employee มี field role
+      if (data.status === 200) {
+        const token = data.data.token;
+        const user = data.data.user;
+        const role = user.employeesModel.role;
+
+        localStorage.setItem("token", token);
         localStorage.setItem("role", role);
+        localStorage.setItem("username", user.username);
 
         if (role === "waitress") {
           navigate("/customer");
@@ -41,16 +45,13 @@ function Login() {
           alert("Unknown role");
         }
       } else {
-        setError('ไม่สามารถโหลดข้อมูลพนักงานได้');
+        setError('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
       }
-    } else {
-      setError('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+    } catch (err) {
+      console.error(err);
+      setError('เกิดข้อผิดพลาดในการเชื่อมต่อ');
     }
-  } catch (err) {
-    console.error(err);
-    setError('เกิดข้อผิดพลาดในการเชื่อมต่อ');
-  }
-};
+  };
 
 
   return (

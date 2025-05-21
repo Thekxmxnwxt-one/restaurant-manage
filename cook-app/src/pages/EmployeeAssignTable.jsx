@@ -11,6 +11,11 @@ const AssignCustomer = () => {
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
 
+  const token = localStorage.getItem('token'); // ✅ ดึง token จาก localStorage
+  const authHeader = {
+    'Authorization': `Bearer ${token}`
+  };
+
   useEffect(() => {
     fetchTables();
     fetchActiveCustomers();
@@ -74,10 +79,16 @@ const AssignCustomer = () => {
       tableId: parsedTableId
     });
 
+    console.log('Token:', localStorage.getItem('token'));
+
+
     try {
       const res = await fetch('http://localhost:8080/api/customers', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           name,
           phone,

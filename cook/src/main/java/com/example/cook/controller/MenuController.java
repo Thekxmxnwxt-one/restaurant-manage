@@ -28,17 +28,17 @@ public class MenuController {
         return this.menuService.getMenuByMenuID(menuID);
     }
 
-    @PostMapping("/menu")
+    @PostMapping("/manager/menu")
     public ResponseModel<Integer> insertMenu(@RequestBody List<MenuItemModel> menuItemModels){
         return this.menuService.insertMenu(menuItemModels);
     }
 
-    @PutMapping("/menu")
+    @PutMapping("/manager/menu")
     public ResponseModel<MenuItemModel> updateMenu(@RequestBody MenuItemModel menuItemModels) {
         return this.menuService.updateMenu(menuItemModels);
     }
 
-    @DeleteMapping("menu/{menuID}")
+    @DeleteMapping("/manager/menu/{menuID}")
     public ResponseModel<String> deleteMenu(@PathVariable int menuID){
         return this.menuService.deleteMenu(menuID);
     }

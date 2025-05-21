@@ -27,7 +27,7 @@ public class TableController {
         return this.tableService.getTableByTableNumber(tableNumber);
     }
 
-    @PostMapping("/tables")
+    @PostMapping("/manager/tables")
     public ResponseModel<Integer> insertTable(@RequestBody List<TablesModel> tablesModels){
         return this.tableService.insertTable(tablesModels);
     }
@@ -37,7 +37,7 @@ public class TableController {
         return this.tableService.updateTable(tablesModel);
     }
 
-    @DeleteMapping("tables/{tableId}")
+    @DeleteMapping("/manager/tables/{tableId}")
     public ResponseModel<String> deleteMenu(@PathVariable int tableId){
         return this.tableService.deleteTable(tableId);
     }

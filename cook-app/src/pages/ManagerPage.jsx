@@ -40,9 +40,16 @@ const [editingMenuData, setEditingMenuData] = useState({
 
 const [totalSales, setTotalSales] = useState(0);
 
+const token = localStorage.getItem('token'); 
+
+
 const fetchTotalSales = async () => {
   try {
-    const res = await axios.get('http://localhost:8080/api/payment');
+    const res = await axios.get('http://localhost:8080/api/payment', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
     if (res.data.status === 200 && Array.isArray(res.data.data)) {
       const total = res.data.data.reduce((sum, payment) => sum + payment.amount, 0);
       setTotalSales(total);
@@ -63,11 +70,19 @@ const handleEditEmployee = (emp) => {
 const handleUpdateEmployee = async (e) => {
   e.preventDefault();
   try {
-    await axios.put(`http://localhost:8080/api/employee`, {
-      id: editingEmployeeId,
-      name: editingEmpName,
-      role: editingEmpPosition,
-    });
+    await axios.put(`http://localhost:8080/api/manager/employee`,
+      {
+        id: editingEmployeeId,
+        name: editingEmpName,
+        role: editingEmpPosition
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
     setEditingEmployeeId(null);
     fetchEmployees();
   } catch (error) {
@@ -85,7 +100,11 @@ const handleUpdateEmployee = async (e) => {
 
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/api/employee");
+      const res = await axios.get("http://localhost:8080/api/employee", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
       console.log(res.data);
       if (res.data.status === 200 && Array.isArray(res.data.data)) {
         setEmployees(res.data.data);
@@ -105,7 +124,11 @@ const handleUpdateEmployee = async (e) => {
         name: empName.trim(),
         role: empPosition.trim(),
       };
-      const res = await axios.post("http://localhost:8080/api/employee", postData);
+      const res = await axios.post("http://localhost:8080/api/manager/employee", postData, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
       if (res.data.status === 201) {
         fetchEmployees();
         setEmpName('');
@@ -119,7 +142,11 @@ const handleUpdateEmployee = async (e) => {
   // ลบพนักงาน
   const handleDeleteEmployee = async (id) => {
     try {
-      const res = await axios.delete(`http://localhost:8080/api/employee/${id}`);
+      const res = await axios.delete(`http://localhost:8080/api/manager/employee/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
       if (res.data.status === 200) {
         fetchEmployees();
       }
@@ -130,7 +157,11 @@ const handleUpdateEmployee = async (e) => {
 
   const fetchKitchenStations = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/api/kitchen/stations");
+      const res = await axios.get("http://localhost:8080/api/kitchen/stations", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
       if (res.data.status === 200 && Array.isArray(res.data.data)) {
         setKitchenStations(res.data.data);
       }
@@ -162,7 +193,13 @@ const handleUpdateEmployee = async (e) => {
     };
 
     try {
-      await axios.post("http://localhost:8080/api/menu", [newMenu]);
+      await axios.post("http://localhost:8080/api/manager/menu", 
+        [newMenu],
+      {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
       fetchMenus(); // โหลดใหม่
       setMenuName('');
       setMenuImageUrl('');
@@ -176,7 +213,11 @@ const handleUpdateEmployee = async (e) => {
 
   const handleDeleteMenu = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/menu/${id}`);
+      await axios.delete(`http://localhost:8080/api/manager/menu/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
       fetchMenus(); // โหลดใหม่
     } catch (error) {
       console.error("Error deleting menu", error);
@@ -205,7 +246,13 @@ const handleUpdateEmployee = async (e) => {
         status: 'available'
       }
     ];
-    const res = await axios.post('http://localhost:8080/api/tables', postData);
+    const res = await axios.post('http://localhost:8080/api/manager/tables', postData,
+      {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }
+    );
     if (res.data.status === 201) {
       fetchTables();
       setNewTableName('');
@@ -219,7 +266,13 @@ const handleUpdateEmployee = async (e) => {
   // ลบโต๊ะ
   const handleDeleteTable = async (tableId) => {
     try {
-      const res = await axios.delete(`http://localhost:8080/api/tables/${tableId}`);
+      const res = await axios.delete(`http://localhost:8080/api/manager/tables/${tableId}`,
+        {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+      );
       if (res.status === 200) {
         fetchTables();
       }

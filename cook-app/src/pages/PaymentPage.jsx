@@ -12,6 +12,9 @@ function PaymentPage() {
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [payingOrderId, setPayingOrderId] = useState(null);
 
+  const token = localStorage.getItem('token'); 
+
+
   useEffect(() => {
   async function fetchData() {
     try {
@@ -23,7 +26,13 @@ function PaymentPage() {
       const allOrders = ordersData.data;
 
       // ดึง payments
-      const paymentsRes = await fetch('http://localhost:8080/api/payment');
+      const paymentsRes = await fetch('http://localhost:8080/api/payment',{
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      method: 'GET'
+    });
       if (!paymentsRes.ok) throw new Error('Failed to fetch payments');
       const paymentsData = await paymentsRes.json();
       if (paymentsData.status !== 200) throw new Error(paymentsData.description || 'Error fetching payments');
@@ -83,7 +92,10 @@ function PaymentPage() {
   try {
     const res = await fetch('http://localhost:8080/api/payment', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({
         orderId: selectedOrder.id,
         amount: calculateTotal(selectedOrder),

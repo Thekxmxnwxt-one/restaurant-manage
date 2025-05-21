@@ -28,17 +28,17 @@ public class EmployeeController {
         return this.employeeService.getEmployeeById(id);
     }
 
-    @PostMapping("/employee")
+    @PostMapping("/manager/employee")
     public ResponseModel<Integer> insertEmployee(@RequestBody EmployeesModel employeesModel){
         return this.employeeService.insertEmployee(employeesModel);
     }
 
-    @PutMapping("/employee")
+    @PutMapping("/manager/employee")
     public ResponseModel<EmployeesModel> updateEmployee(@RequestBody EmployeesModel employeesModel) {
         return this.employeeService.updateEmployee(employeesModel);
     }
 
-    @DeleteMapping("employee/{id}")
+    @DeleteMapping("/manager/employee/{id}")
     public ResponseModel<String> deleteEmployee(@PathVariable int id){
         return this.employeeService.deleteEmployee(id);
     }
