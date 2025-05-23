@@ -9,6 +9,9 @@ import com.example.cook.repository.CustomerNativeRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
@@ -102,6 +105,9 @@ public class CustomerRepositoryImpl implements CustomerNativeRepository {
     @Override
     public int insertCustomer(CustomersModel customersModel) {
 
+        // Hash เบอร์โทรก่อน
+        String hashedPhone = hashPhone(customersModel.getPhone());
+
         String sql = """
         INSERT INTO customers (name, phone, table_id, status, created_at)
         VALUES (?, ?, ?, ?::customer_status, NOW())
@@ -110,12 +116,31 @@ public class CustomerRepositoryImpl implements CustomerNativeRepository {
         int insertedRow = jdbcTemplate.update(
                 sql,
                 customersModel.getName(),
-                customersModel.getPhone(),
+                hashedPhone,
                 customersModel.getTablesId(),
                 customersModel.getStatus().name()
         );
         return insertedRow;
     }
+
+    private String hashPhone(String phone) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedHash = digest.digest(phone.getBytes(StandardCharsets.UTF_8));
+
+            StringBuilder hexString = new StringBuilder(2 * encodedHash.length);
+            for (byte b : encodedHash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("SHA-256 not available", e);
+        }
+    }
+
 
     @Override
     public CustomersModel updateStatusCustomer(CustomersModel customersModel) {

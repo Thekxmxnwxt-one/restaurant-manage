@@ -33,7 +33,7 @@ public class UserService {
     }
 
     public int insertEmployeeWithUser(EmployeesModel employeesModel, String username, String rawPassword) {
-        // สมมติว่าตรวจสอบว่ามี user ซ้ำ
+
         boolean exists = userNativeRepository.existsByUsername(username);
         if (exists) {
             throw new AlreadyExistsException("User '" + username + "' already exists");
