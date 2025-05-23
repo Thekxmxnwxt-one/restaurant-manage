@@ -1,5 +1,6 @@
 package com.example.cook.entity;
 
+import com.example.cook.enums.KitchenstationType;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,5 +12,6 @@ public class KitchenStationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private KitchenstationType name;
 }

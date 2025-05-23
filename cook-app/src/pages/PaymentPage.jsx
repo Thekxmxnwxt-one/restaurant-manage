@@ -111,7 +111,7 @@ function PaymentPage() {
       await fetch(`http://localhost:8080/api/tables/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({id: selectedOrder.tableId, status: 'available' })
+        body: JSON.stringify({id: selectedOrder.tableId, status: 'AVAILABLE' })
       });
     }
 
@@ -119,7 +119,9 @@ function PaymentPage() {
     if (selectedOrder.customer?.id) {
       await fetch(`http://localhost:8080/api/customers/status`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          Authorization: `Bearer ${token}`, 
+          'Content-Type': 'application/json' },
         body: JSON.stringify({ id: selectedOrder.customer.id, status: 'done' })
       });
     }

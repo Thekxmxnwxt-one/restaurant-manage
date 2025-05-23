@@ -19,46 +19,91 @@ public class OrderController {
 
     @GetMapping("/orders")//
     public ResponseModel<List<OrderModel>> getAllOrder(){
-        return this.orderService.getAllOrder();
+        List<OrderModel> order = orderService.getAllOrder();
+        ResponseModel<List<OrderModel>> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(order);
+        return response;
     }
 
     @GetMapping("/orders/{orderId}")
     public ResponseModel<OrderModel> getOrderByOrderID(@PathVariable int orderId){
-        return this.orderService.getOrderByOrderID(orderId);
+        OrderModel order = orderService.getOrderByOrderID(orderId);
+        ResponseModel<OrderModel> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(order);
+        return response;
     }
 
     @PostMapping("/orders")
     public ResponseModel<Integer> insertOrder(@RequestBody OrderModel orderModel){
-        return this.orderService.insertOrder(orderModel);
+        int order = orderService.insertOrder(orderModel);
+        ResponseModel<Integer> response = new ResponseModel<>();
+        response.setStatus(201);
+        response.setDescription("success");
+        response.setData(order);
+        return response;
     }
 
     @PutMapping("/orders/status")
     public ResponseModel<OrderModel> updateOrder(@RequestBody OrderModel orderModel) {
-        return this.orderService.updateOrder(orderModel);
+        OrderModel order = orderService.updateOrder(orderModel);
+        ResponseModel<OrderModel> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(order);
+        return response;
     }
 
     @DeleteMapping("orders/{orderId}")
     public ResponseModel<String> deleteOrder(@PathVariable int orderId){
-        return this.orderService.deleteOrder(orderId);
+        String order = orderService.deleteOrder(orderId);
+        ResponseModel<String> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(order);
+        return response;
     }
 
     @PostMapping("/orders/items")
     public ResponseModel<Integer> insertOrderItem(@RequestBody OrderItemModel orderModel){
-        return this.orderService.insertOrderItem(orderModel);
+        int order = orderService.insertOrderItem(orderModel);
+        ResponseModel<Integer> response = new ResponseModel<>();
+        response.setStatus(201);
+        response.setDescription("success");
+        response.setData(order);
+        return response;
     }
 
     @PutMapping("/orders/items")
     public ResponseModel<OrderItemModel> updateOrderItem(@RequestBody OrderItemModel orderModel) {
-        return this.orderService.updateOrderItem(orderModel);
+        OrderItemModel order = orderService.updateOrderItem(orderModel);
+        ResponseModel<OrderItemModel> response = new ResponseModel<>();
+        response.setStatus(201);
+        response.setDescription("success");
+        response.setData(order);
+        return response;
     }
 
     @DeleteMapping("orders/items/{orderId}")
     public ResponseModel<String> deleteOrderItem(@PathVariable int orderId){
-        return this.orderService.deleteOrderItem(orderId);
+        String order = orderService.deleteOrderItem(orderId);
+        ResponseModel<String> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(order);
+        return response;
     }
 
     @PatchMapping("/orders/items")
     public ResponseModel<OrderItemModel> updateOrderItemStatus(@RequestBody OrderItemModel orderModel) {
-        return this.orderService.updateOrderItemStatus(orderModel);
+        OrderItemModel order = orderService.updateOrderItemStatus(orderModel);
+        ResponseModel<OrderItemModel> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(order);
+        return response;
     }
 }

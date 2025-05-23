@@ -1,9 +1,13 @@
 package com.example.cook.repository.impl;
 
+import com.example.cook.enums.EmployeeRole;
+import com.example.cook.enums.KitchenstationType;
 import com.example.cook.model.EmployeesModel;
 import com.example.cook.model.KitchenStationModel;
 import com.example.cook.repository.EmployeeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -17,6 +21,8 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+
+
     @Override
     public List<EmployeesModel> findAllEmployee() {
         String sql = "SELECT id, name, role FROM employees";
@@ -24,7 +30,8 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
             EmployeesModel model = new EmployeesModel();
             model.setId(rs.getInt("id"));
             model.setName(rs.getString("name"));
-            model.setRole(rs.getString("role"));
+            model.setRole(EmployeeRole.valueOf(rs.getString("role")));
+
             return model;
         });
     }
@@ -36,7 +43,8 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
             EmployeesModel model = new EmployeesModel();
             model.setId(rs.getInt("id"));
             model.setName(rs.getString("name"));
-            model.setRole(rs.getString("role"));
+            model.setRole(EmployeeRole.valueOf(rs.getString("role")));
+
             return model;
         });
     }
@@ -45,16 +53,17 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     public int insertEmployee(EmployeesModel employeesModel) {
         String sql = """
         INSERT INTO employees (name, role)
-        VALUES (?, ?)
+        VALUES (?, ?::employee_role)
     """;
 
         int insertedRow = jdbcTemplate.update(
                 sql,
                 employeesModel.getName(),
-                employeesModel.getRole()
+                employeesModel.getRole().name()
         );
         return insertedRow;
     }
+
 
     @Override
     public EmployeesModel updateEmployee(EmployeesModel employeesModel) {
@@ -66,9 +75,9 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
             params.add(employeesModel.getName());
         }
 
-        if (employeesModel.getRole() != null) {
-            sql.append("role = ?, ");
-            params.add(employeesModel.getRole());
+        if (employeesModel.getRole().name() != null) {
+            sql.append("role = ?::employee_role, ");
+            params.add(employeesModel.getRole().name());
         }
 
         if (params.isEmpty()) return null;

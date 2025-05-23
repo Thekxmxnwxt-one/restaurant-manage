@@ -1,5 +1,7 @@
 package com.example.cook.repository.impl;
 
+import com.example.cook.enums.CustomerStatus;
+import com.example.cook.enums.TableStatus;
 import com.example.cook.model.CustomersModel;
 import com.example.cook.model.TablesModel;
 import com.example.cook.model.UsersModel;
@@ -32,7 +34,7 @@ public class TableRepositoryImpl implements TableNativeRepository {
                 TablesModel model = new TablesModel();
                 model.setId(rs.getInt("id"));
                 model.setTableNumber(rs.getInt("table_number"));
-                model.setStatus(rs.getString("status"));
+                model.setStatus(TableStatus.fromDbValue(rs.getString("status")));
                 return model;
             }
         });
@@ -61,7 +63,8 @@ public class TableRepositoryImpl implements TableNativeRepository {
             TablesModel table = new TablesModel();
             table.setId(rs.getInt("table_id"));
             table.setTableNumber(rs.getInt("table_number"));
-            table.setStatus(rs.getString("table_status"));
+            table.setStatus(TableStatus.fromDbValue(rs.getString("table_status")));
+
 
             CustomersModel customer = new CustomersModel();
 
@@ -70,7 +73,7 @@ public class TableRepositoryImpl implements TableNativeRepository {
                 customer.setName(rs.getString("customer_name"));
                 customer.setPhone(rs.getString("customer_phone"));
                 customer.setTablesId(rs.getInt("customer_tableId"));
-                customer.setStatus(rs.getString("customer_status"));
+                customer.setStatus(CustomerStatus.valueOf(rs.getString("customer_status")));
                 customer.setCreatedAt(rs.getTimestamp("customer_created_at").toLocalDateTime());
                 customer.setMessage("This table have customer");
             } else {
@@ -92,9 +95,9 @@ public class TableRepositoryImpl implements TableNativeRepository {
 
         StringJoiner stringJoiner = new StringJoiner(",");
         for (TablesModel t : tablesModels){
-            String value = " (?, ?) ";
+            String value = " (?, ?::table_status) ";
             paramList.add(t.getTableNumber());
-            paramList.add(t.getStatus());
+            paramList.add(t.getStatus().getDbValue());
             stringJoiner.add(value);
         }
 
@@ -106,9 +109,9 @@ public class TableRepositoryImpl implements TableNativeRepository {
 
     @Override
     public TablesModel updateTable(TablesModel tablesModel) {
-        String sql = "UPDATE tables SET status = ? WHERE id = ?";
+        String sql = "UPDATE tables SET status = ?::table_status WHERE id = ?";
 
-        int rows = jdbcTemplate.update(sql, tablesModel.getStatus(), tablesModel.getId());
+        int rows = jdbcTemplate.update(sql, tablesModel.getStatus().getDbValue(), tablesModel.getId());
 
         if (rows > 0) {
             return tablesModel;

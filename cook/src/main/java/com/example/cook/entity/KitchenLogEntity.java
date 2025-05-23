@@ -1,5 +1,6 @@
 package com.example.cook.entity;
 
+import com.example.cook.enums.LogStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,7 +24,8 @@ public class KitchenLogEntity {
     @JoinColumn(name = "station_id")
     private KitchenStationEntity stationId;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private LogStatus status;
 
     @CreationTimestamp
     @Column(name = "timestamp", updatable = false)

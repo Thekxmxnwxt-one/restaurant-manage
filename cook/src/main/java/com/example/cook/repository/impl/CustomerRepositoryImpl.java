@@ -1,5 +1,8 @@
 package com.example.cook.repository.impl;
 
+import com.example.cook.enums.CustomerStatus;
+import com.example.cook.enums.EmployeeRole;
+import com.example.cook.enums.TableStatus;
 import com.example.cook.model.CustomersModel;
 import com.example.cook.model.TablesModel;
 import com.example.cook.repository.CustomerNativeRepository;
@@ -29,7 +32,7 @@ public class CustomerRepositoryImpl implements CustomerNativeRepository {
             customer.setName(rs.getString("name"));
             customer.setPhone(rs.getString("phone"));
             customer.setTablesId(rs.getInt("table_id"));
-            customer.setStatus(rs.getString("status"));
+            customer.setStatus(CustomerStatus.valueOf(rs.getString("status")));
             customer.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
             return customer;
         });
@@ -50,7 +53,7 @@ public class CustomerRepositoryImpl implements CustomerNativeRepository {
             customer.setName(rs.getString("name"));
             customer.setPhone(rs.getString("phone"));
             customer.setTablesId(rs.getInt("table_id"));
-            customer.setStatus(rs.getString("status"));
+            customer.setStatus(CustomerStatus.valueOf(rs.getString("status")));
             customer.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
             return customer;
         });
@@ -81,13 +84,13 @@ public class CustomerRepositoryImpl implements CustomerNativeRepository {
             cs.setName(rs.getString("customer_name"));
             cs.setPhone(rs.getString("customer_phone"));
             cs.setTablesId(rs.getInt("customer_tableId"));
-            cs.setStatus(rs.getString("customer_status"));
+            cs.setStatus(CustomerStatus.valueOf(rs.getString("customer_status")));
             cs.setCreatedAt(rs.getTimestamp("customer_created_at").toLocalDateTime());
 
             TablesModel tb = new TablesModel();
             tb.setId(rs.getInt("table_id"));
             tb.setTableNumber(rs.getInt("table_number"));
-            tb.setStatus(rs.getString("table_status"));
+            tb.setStatus(TableStatus.valueOf(rs.getString("table_status")));
 
             cs.setTablesModel(tb);
             return cs;
@@ -101,7 +104,7 @@ public class CustomerRepositoryImpl implements CustomerNativeRepository {
 
         String sql = """
         INSERT INTO customers (name, phone, table_id, status, created_at)
-        VALUES (?, ?, ?, ?, NOW())
+        VALUES (?, ?, ?, ?::customer_status, NOW())
     """;
 
         int insertedRow = jdbcTemplate.update(
@@ -109,16 +112,16 @@ public class CustomerRepositoryImpl implements CustomerNativeRepository {
                 customersModel.getName(),
                 customersModel.getPhone(),
                 customersModel.getTablesId(),
-                customersModel.getStatus()
+                customersModel.getStatus().name()
         );
         return insertedRow;
     }
 
     @Override
     public CustomersModel updateStatusCustomer(CustomersModel customersModel) {
-        String sql = "UPDATE customers SET status = ? WHERE id = ?";
+        String sql = "UPDATE customers SET status = ?::customer_status WHERE id = ?";
 
-        int rows = jdbcTemplate.update(sql, customersModel.getStatus(), customersModel.getId());
+        int rows = jdbcTemplate.update(sql, customersModel.getStatus().name(), customersModel.getId());
 
         if (rows > 0) {
             return customersModel;

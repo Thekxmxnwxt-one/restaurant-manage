@@ -1,6 +1,7 @@
 package com.example.cook.model;
 
 import com.example.cook.entity.TablesEntity;
+import com.example.cook.enums.CustomerStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -15,7 +16,7 @@ public class CustomersModel {
     private String name;
     private String phone;
     private Integer tablesId;
-    private String status;
+    private CustomerStatus status;
     private LocalDateTime createdAt;
     private String message;
     private TablesModel tablesModel;

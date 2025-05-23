@@ -8,11 +8,15 @@ import ManagerPage from "./pages/ManagerPage";
 import AssignCustomer from "./pages/EmployeeAssignTable";
 import OrderStatusByTable from "./pages/OrderStatusByTable";
 
+import RegisterPage from "./pages/RegisterPage ";
+
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/customer" element={<AssignCustomer />} />
         <Route path="/order" element={<CustomerOrder />} />
         <Route path="/kitchen" element={<KitchenPage />} />

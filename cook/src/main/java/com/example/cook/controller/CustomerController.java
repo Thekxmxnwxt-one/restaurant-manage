@@ -1,6 +1,7 @@
 package com.example.cook.controller;
 
 import com.example.cook.model.CustomersModel;
+import com.example.cook.model.EmployeesModel;
 import com.example.cook.model.ResponseModel;
 import com.example.cook.model.TablesModel;
 import com.example.cook.service.CustomerService;
@@ -19,27 +20,52 @@ public class CustomerController {
     }
 
     @GetMapping("/customers")
-    public ResponseModel<List<CustomersModel>> getAllTable(){
-        return this.customerService.getAllCustomer();
+    public ResponseModel<List<CustomersModel>> getAllCustomer(){
+        List<CustomersModel> cs = customerService.getAllCustomer();
+        ResponseModel<List<CustomersModel>> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(cs);
+        return response;
     }
 
     @GetMapping("/customers/active")
     public ResponseModel<List<CustomersModel>> getAllActiveTable(){
-        return this.customerService.getAllActiveCustomer();
+        List<CustomersModel> cs = customerService.getAllCustomer();
+        ResponseModel<List<CustomersModel>> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(cs);
+        return response;
     }
 
     @GetMapping("/customers/{customerId}")
-    public ResponseModel<CustomersModel> getTableByTableNumber(@PathVariable int customerId){
-        return this.customerService.getCustomerByCustomerId(customerId);
+    public ResponseModel<CustomersModel> getCustomerById(@PathVariable int customerId){
+        CustomersModel cs = customerService.getCustomerByCustomerId(customerId);
+        ResponseModel<CustomersModel> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(cs);
+        return response;
     }
 
     @PostMapping("/customers")
     public ResponseModel<Integer> insertCustomer(@RequestBody CustomersModel customersModel){
-        return this.customerService.insertCustomer(customersModel);
+        int cs = customerService.insertCustomer(customersModel);
+        ResponseModel<Integer> response = new ResponseModel<>();
+        response.setStatus(201);
+        response.setDescription("success");
+        response.setData(cs);
+        return response;
     }
 
     @PutMapping("/customers/status")
-    public ResponseModel<CustomersModel> updateTable(@RequestBody CustomersModel customersModel) {
-        return this.customerService.updateCustomerStatus(customersModel);
+    public ResponseModel<CustomersModel> updateCustomer(@RequestBody CustomersModel customersModel) {
+        CustomersModel cs = customerService.updateCustomerStatus(customersModel);
+        ResponseModel<CustomersModel> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(cs);
+        return response;
     }
 }

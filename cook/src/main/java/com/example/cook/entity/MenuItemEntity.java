@@ -1,5 +1,6 @@
 package com.example.cook.entity;
 
+import com.example.cook.enums.MenuCategory;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,6 +18,9 @@ public class MenuItemEntity {
     private String imageUrl;
     private String description;
     private BigDecimal price;
-    private String category;
+
+    @Enumerated(EnumType.STRING)
+    private MenuCategory category;
+
     private Boolean available;
 }

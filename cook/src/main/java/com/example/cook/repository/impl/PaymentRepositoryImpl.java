@@ -1,5 +1,6 @@
 package com.example.cook.repository.impl;
 
+import com.example.cook.enums.*;
 import com.example.cook.model.*;
 import com.example.cook.repository.PaymentRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,7 +27,7 @@ public class PaymentRepositoryImpl implements PaymentRepository {
             payment.setId(rs.getInt("id"));
             payment.setOrderId(rs.getInt("order_id"));
             payment.setAmount(rs.getBigDecimal("amount"));
-            payment.setMethod(rs.getString("method"));
+            payment.setMethod(PaymentMethod.valueOf(rs.getString("method")));
             payment.setPaidAt(rs.getTimestamp("paid_at").toLocalDateTime());
             return payment;
         });
@@ -41,7 +42,7 @@ public class PaymentRepositoryImpl implements PaymentRepository {
             payment.setId(rs.getInt("id"));
             payment.setOrderId(rs.getInt("order_id"));
             payment.setAmount(rs.getBigDecimal("amount"));
-            payment.setMethod(rs.getString("method"));
+            payment.setMethod(PaymentMethod.valueOf(rs.getString("method")));
             payment.setPaidAt(rs.getTimestamp("paid_at").toLocalDateTime());
             return payment;
         });
@@ -103,7 +104,7 @@ public class PaymentRepositoryImpl implements PaymentRepository {
                     payment.setId(rs.getInt("payment_id"));
                     payment.setOrderId(rs.getInt("order_id"));
                     payment.setAmount(rs.getBigDecimal("amount"));
-                    payment.setMethod(rs.getString("method"));
+                    payment.setMethod(PaymentMethod.valueOf(rs.getString("method")));
                     payment.setPaidAt(rs.getTimestamp("paid_at").toLocalDateTime());
 
                     order = new OrderModel();
@@ -111,7 +112,7 @@ public class PaymentRepositoryImpl implements PaymentRepository {
                     order.setCustomerId(rs.getInt("customer_id"));
                     order.setTableId(rs.getInt("table_id"));
                     order.setEmployeeId(rs.getInt("employee_id"));
-                    order.setStatus(rs.getString("order_status"));
+                    order.setStatus(OrderStatus.valueOf(rs.getString("order_status")));
                     order.setOrderedAt(rs.getTimestamp("ordered_at").toLocalDateTime());
 
                     Timestamp closedAt = rs.getTimestamp("closed_at");
@@ -123,7 +124,11 @@ public class PaymentRepositoryImpl implements PaymentRepository {
 
                     EmployeesModel employee = new EmployeesModel();
                     employee.setName(rs.getString("employee_name"));
-                    employee.setRole(rs.getString("employee_role"));
+                    employee.setRole(EmployeeRole.valueOf(rs.getString("employee_role")));
+
+
+                    order.setStatus(OrderStatus.valueOf(rs.getString("order_status")));
+
                     order.setEmployee(employee);
 
                     TablesModel table = new TablesModel();
@@ -139,14 +144,14 @@ public class PaymentRepositoryImpl implements PaymentRepository {
                     item.setMenuItemId(rs.getInt("menu_item_id"));
                     item.setUnitPrice(rs.getBigDecimal("unit_price"));
                     item.setQuantity(rs.getInt("quantity"));
-                    item.setStatus(rs.getString("item_status"));
-                    item.setKitchenStation(rs.getString("kitchen_station"));
+                    item.setStatus(ItemStatus.valueOf(rs.getString("item_status")));
+                    item.setKitchenStation(KitchenstationType.fromDisplayName(rs.getString("kitchen_station")));
 
                     MenuItemModel menu = new MenuItemModel();
                     menu.setId(rs.getInt("menu_item_id"));
                     menu.setName(rs.getString("menu_name"));
                     menu.setPrice(rs.getBigDecimal("menu_price"));
-                    menu.setCategory(rs.getString("category"));
+                    menu.setCategory(MenuCategory.fromDisplayName(rs.getString("category")));
 
                     item.setMenuItem(menu);
                     items.add(item);
@@ -168,13 +173,13 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     public int insertPayment(PaymentModel payment) {
         String sql = """
         INSERT INTO payments (order_id, amount, method)
-        VALUES (?, ?, ?)
+        VALUES (?, ?, ?::payment_method)
     """;
         return jdbcTemplate.update(
                 sql,
                 payment.getOrderId(),
                 payment.getAmount(),
-                payment.getMethod()
+                payment.getMethod().name()
         );
     }
 

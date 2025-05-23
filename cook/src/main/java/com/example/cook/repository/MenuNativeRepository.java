@@ -12,5 +12,6 @@ public interface MenuNativeRepository {
     public int insertMenu(List<MenuItemModel> menuItemModels);
     public MenuItemModel updateMenu(MenuItemModel menuItemModel);
     public String deleteMenu(int id);
+    public MenuItemModel findMenuByName(String name);
 
 }

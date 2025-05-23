@@ -1,5 +1,6 @@
 package com.example.cook.entity;
 
+import com.example.cook.enums.CustomerStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,7 +24,8 @@ public class CustomersEntity {
     @JoinColumn(name = "table_id")
     private TablesEntity tables;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private CustomerStatus status;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

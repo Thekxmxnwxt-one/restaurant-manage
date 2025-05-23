@@ -1,5 +1,6 @@
 package com.example.cook.repository.impl;
 
+import com.example.cook.enums.*;
 import com.example.cook.model.*;
 import com.example.cook.repository.OrderNativeRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -56,7 +57,8 @@ public class OrderRepositoryImpl implements OrderNativeRepository {
             order.setTableId(rs.getInt("table_id"));
             order.setEmployeeId(rs.getInt("employee_id"));
             order.setOrderedAt(rs.getTimestamp("ordered_at").toLocalDateTime());
-            order.setStatus(rs.getString("order_status"));
+            order.setStatus(OrderStatus.valueOf(rs.getString("order_status")));
+
 
             Timestamp closedAt = rs.getTimestamp("closed_at");
             if (closedAt != null) {
@@ -68,7 +70,7 @@ public class OrderRepositoryImpl implements OrderNativeRepository {
             customer.setId(rs.getInt("customer_id"));
             customer.setName(rs.getString("customer_name"));
             customer.setPhone(rs.getString("customer_phone"));
-            customer.setStatus(rs.getString("status"));
+            customer.setStatus(CustomerStatus.valueOf(rs.getString("status")));
             customer.setTablesId(rs.getInt("table_id"));
             order.setCustomer(customer);
 
@@ -76,14 +78,16 @@ public class OrderRepositoryImpl implements OrderNativeRepository {
             TablesModel table = new TablesModel();
             table.setId(rs.getInt("table_id"));
             table.setTableNumber(rs.getInt("table_number"));
-            table.setStatus(rs.getString("table_status"));
+            table.setStatus(TableStatus.fromDbValue(rs.getString("table_status")));
+
             order.setTable(table);
 
             // เพิ่มข้อมูลพนักงาน
             EmployeesModel employee = new EmployeesModel();
             employee.setId(rs.getInt("employee_id"));
             employee.setName(rs.getString("employee_name"));
-            employee.setRole(rs.getString("employee_role"));
+            employee.setRole(EmployeeRole.valueOf(rs.getString("employee_role")));
+
             order.setEmployee(employee);
 
             return order;
@@ -133,7 +137,7 @@ public class OrderRepositoryImpl implements OrderNativeRepository {
                     order.setTableId(rs.getInt("table_id"));
                     order.setEmployeeId(rs.getInt("employee_id"));
                     order.setOrderedAt(rs.getTimestamp("ordered_at").toLocalDateTime());
-                    order.setStatus(rs.getString("order_status"));
+                    order.setStatus(OrderStatus.valueOf(rs.getString("order_status")));
 
                     Timestamp closedAt = rs.getTimestamp("closed_at");
                     if (closedAt != null) {
@@ -149,15 +153,15 @@ public class OrderRepositoryImpl implements OrderNativeRepository {
                     item.setUnitPrice(rs.getBigDecimal("unit_price"));
                     item.setMenuItemId(rs.getInt("menu_item_id"));
                     item.setQuantity(rs.getInt("quantity"));
-                    item.setStatus(rs.getString("item_status"));
-                    item.setKitchenStation(rs.getString("kitchen_station"));
+                    item.setStatus(ItemStatus.valueOf(rs.getString("item_status")));
+                    item.setKitchenStation(KitchenstationType.fromDisplayName(rs.getString("kitchen_station")));
 
                     MenuItemModel menu = new MenuItemModel();
                     menu.setId(rs.getInt("menu_item_id"));
                     menu.setName(rs.getString("menu_name"));
                     menu.setImageUrl(rs.getString("image_url"));
                     menu.setPrice(rs.getBigDecimal("price"));
-                    menu.setCategory(rs.getString("category"));
+                    menu.setCategory(MenuCategory.fromDisplayName(rs.getString("category")));
                     menu.setAvailable(rs.getBoolean("available"));
 
                     item.setMenuItem(menu);
@@ -177,7 +181,7 @@ public class OrderRepositoryImpl implements OrderNativeRepository {
     public int insertOrder(OrderModel orderModels) {
         String sql = """
         INSERT INTO orders (customer_id, table_id, employee_id, ordered_at, status, closed_at)
-        VALUES (?, ?, ?, NOW(), ?, NOW())
+        VALUES (?, ?, ?, NOW(), ?::order_status, NOW())
     """;
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -188,7 +192,8 @@ public class OrderRepositoryImpl implements OrderNativeRepository {
             ps.setInt(1, orderModels.getCustomerId());
             ps.setInt(2, orderModels.getTableId());
             ps.setInt(3, orderModels.getEmployeeId());
-            ps.setString(4, orderModels.getStatus());
+            ps.setString(4, orderModels.getStatus().name());
+
             return ps;
         }, keyHolder);
 
@@ -200,9 +205,9 @@ public class OrderRepositoryImpl implements OrderNativeRepository {
 
     @Override
     public OrderModel updateOrder(OrderModel orderModel) {
-        String sql = "UPDATE orders SET status = ? WHERE id = ?";
+        String sql = "UPDATE orders SET status = ?::order_status WHERE id = ?";
 
-        int rows = jdbcTemplate.update(sql, orderModel.getStatus(), orderModel.getId());
+        int rows = jdbcTemplate.update(sql, orderModel.getStatus().name(), orderModel.getId());
 
         if (rows > 0) {
             return orderModel;
@@ -233,7 +238,7 @@ public class OrderRepositoryImpl implements OrderNativeRepository {
             quantity,
             status,
             kitchen_station)
-        VALUES (?, ?, ?, ?, 'pending', ?)
+        VALUES (?, ?, ?, ?, 'pending', ?::kitchen_station_type)
     """;
         return jdbcTemplate.update(
                 sql,
@@ -241,7 +246,7 @@ public class OrderRepositoryImpl implements OrderNativeRepository {
                 orderItemModel.getUnitPrice(),
                 orderItemModel.getMenuItemId(),
                 orderItemModel.getQuantity(),
-                orderItemModel.getKitchenStation()
+                orderItemModel.getKitchenStation().getDisplayName()
         );
     }
 
@@ -294,9 +299,9 @@ public class OrderRepositoryImpl implements OrderNativeRepository {
 
     @Override
     public OrderItemModel updateOrderItemsStatus(OrderItemModel orderItemModel) {
-        String sql = "UPDATE order_items SET status = ? WHERE id = ?";
+        String sql = "UPDATE order_items SET status = ?::item_status WHERE id = ?";
 
-        int rows = jdbcTemplate.update(sql, orderItemModel.getStatus(), orderItemModel.getId());
+        int rows = jdbcTemplate.update(sql, orderItemModel.getStatus().name(), orderItemModel.getId());
 
         if (rows > 0) {
             return orderItemModel;

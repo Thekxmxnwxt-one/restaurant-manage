@@ -18,21 +18,41 @@ public class KitchenStationController {
 
     @GetMapping("/kitchen/stations")
     public ResponseModel<List<KitchenStationModel>> getAllStation(){
-        return this.kitchenStationService.getAllStation();
+        List<KitchenStationModel> kitchen = kitchenStationService.getAllStation();
+        ResponseModel<List<KitchenStationModel>> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(kitchen);
+        return response;
     }
 
     @GetMapping("/kitchen/stations/{stationName}")
-    public ResponseModel<List<OrderItemModel>> getTableByTableNumber(@PathVariable String stationName){
-        return this.kitchenStationService.getStationByName(stationName);
+    public ResponseModel<List<OrderItemModel>> getKitchenByStationName(@PathVariable String stationName){
+        List<OrderItemModel> kitchen = kitchenStationService.getStationByName(stationName);
+        ResponseModel<List<OrderItemModel>> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(kitchen);
+        return response;
     }
 
     @PostMapping("/kitchen/log")
     public ResponseModel<Integer> insertLog(@RequestBody KitchenLogModel kitchenLogModel){
-        return this.kitchenStationService.insertLog(kitchenLogModel);
+        int kitchen = kitchenStationService.insertLog(kitchenLogModel);
+        ResponseModel<Integer> response = new ResponseModel<>();
+        response.setStatus(201);
+        response.setDescription("success");
+        response.setData(kitchen);
+        return response;
     }
 
     @PatchMapping("/kitchen/log/status")
     public ResponseModel<KitchenLogModel> updateLogStatus(@RequestBody KitchenLogModel kitchenLogModel) {
-        return this.kitchenStationService.updateMenu(kitchenLogModel);
+        KitchenLogModel kitchen = kitchenStationService.updateKitchen(kitchenLogModel);
+        ResponseModel<KitchenLogModel> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(kitchen);
+        return response;
     }
 }

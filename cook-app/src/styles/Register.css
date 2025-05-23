@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+}
+
+.register-container {
+  height: 100vh;
+  background: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80')
+    no-repeat center center / cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-box {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  padding: 40px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+}
+
+.title {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+
+.register-box .form-group {
+  margin-bottom: 20px;
+}
+
+.register-box .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #e0e0e0;
+}
+
+.register-box .form-group input, select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+}
+
+.register-box .form-group input::placeholder {
+  color: #cccccc;
+}
+
+.register-box button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007be5;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.register-box button:hover {
+  background-color: #004aad;
+}
+
+.error-message {
+  background-color: rgba(255, 50, 50, 0.8);
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.success-message {
+  background-color: rgba(50, 255, 50, 0.8);
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.login-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.login-section span {
+  color: #ffffff;
+}
+
+.login-section button {
+  background-color: transparent;
+  border: 2px solid #f0dd36;
+  color: #f0dd36;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 10px 25px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(205, 69, 69, 0.3);
+}
+
+.login-section button:hover {
+  background-color: #f0dd36;
+  color: #fff;
+  box-shadow: 0 6px 12px #625800;
+  transform: translateY(-2px);
+}

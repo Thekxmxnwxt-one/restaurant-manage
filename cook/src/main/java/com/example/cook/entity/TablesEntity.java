@@ -1,5 +1,6 @@
 package com.example.cook.entity;
 
+import com.example.cook.enums.TableStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -12,5 +13,7 @@ public class TablesEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int tableNumber;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private TableStatus status;
 }

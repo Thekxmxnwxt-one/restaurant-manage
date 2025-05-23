@@ -1,5 +1,6 @@
 package com.example.cook.entity;
 
+import com.example.cook.enums.EmployeeRole;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,5 +13,7 @@ public class EmployeesEntity {
     private int id;
 
     private String name;
-    private String role;
+
+    @Enumerated(EnumType.STRING)
+    private EmployeeRole role;
 }

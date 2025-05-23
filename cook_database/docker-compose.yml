@@ -34,7 +34,7 @@ services:
   
   app:
     build:
-      context: ../cook             # <<== ระบุว่า Dockerfile อยู่ที่ไหน
+      context: ../cook
       dockerfile: Dockerfile
     container_name: cook_app
     ports:

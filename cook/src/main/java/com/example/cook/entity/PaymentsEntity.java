@@ -1,5 +1,6 @@
 package com.example.cook.entity;
 
+import com.example.cook.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,7 +21,9 @@ public class PaymentsEntity {
     private OrdersEntity orderId;
 
     private BigDecimal amount;
-    private String method;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod method;
 
     @CreationTimestamp
     @Column(name = "paid_at", updatable = false)

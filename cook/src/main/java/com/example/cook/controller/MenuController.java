@@ -20,27 +20,52 @@ public class MenuController {
 
     @GetMapping("/menu")
     public ResponseModel<List<MenuItemModel>> getAllMenu(){
-        return this.menuService.getAllMenu();
+        List<MenuItemModel>  menu = menuService.getAllMenu();
+        ResponseModel<List<MenuItemModel>>  response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(menu);
+        return response;
     }
 
     @GetMapping("/menu/{menuID}")
     public ResponseModel<MenuItemModel> getMenuByMenuId(@PathVariable int menuID){
-        return this.menuService.getMenuByMenuID(menuID);
+        MenuItemModel menu = menuService.getMenuByMenuID(menuID);
+        ResponseModel<MenuItemModel> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(menu);
+        return response;
     }
 
     @PostMapping("/manager/menu")
     public ResponseModel<Integer> insertMenu(@RequestBody List<MenuItemModel> menuItemModels){
-        return this.menuService.insertMenu(menuItemModels);
+        int menu = menuService.insertMenu(menuItemModels);
+        ResponseModel<Integer> response = new ResponseModel<>();
+        response.setStatus(201);
+        response.setDescription("success");
+        response.setData(menu);
+        return response;
     }
 
     @PutMapping("/manager/menu")
     public ResponseModel<MenuItemModel> updateMenu(@RequestBody MenuItemModel menuItemModels) {
-        return this.menuService.updateMenu(menuItemModels);
+        MenuItemModel menu = menuService.updateMenu(menuItemModels);
+        ResponseModel<MenuItemModel> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(menu);
+        return response;
     }
 
     @DeleteMapping("/manager/menu/{menuID}")
     public ResponseModel<String> deleteMenu(@PathVariable int menuID){
-        return this.menuService.deleteMenu(menuID);
+        String menu = menuService.deleteMenu(menuID);
+        ResponseModel<String> response = new ResponseModel<>();
+        response.setStatus(200);
+        response.setDescription("success");
+        response.setData(menu);
+        return response;
     }
 
 }

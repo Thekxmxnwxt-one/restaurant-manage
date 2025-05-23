@@ -1,5 +1,8 @@
 package com.example.cook.repository.impl;
 
+import com.example.cook.enums.ItemStatus;
+import com.example.cook.enums.KitchenstationType;
+import com.example.cook.enums.MenuCategory;
 import com.example.cook.model.KitchenLogModel;
 import com.example.cook.model.KitchenStationModel;
 import com.example.cook.model.MenuItemModel;
@@ -24,7 +27,8 @@ public class KitchenStationRepositoryImpl implements KitchenStationRepository {
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             KitchenStationModel model = new KitchenStationModel();
             model.setId(rs.getInt("id"));
-            model.setName(rs.getString("name"));
+            model.setName(KitchenstationType.fromDisplayName(rs.getString("name")));
+
             return model;
         });
     }
@@ -64,14 +68,14 @@ public class KitchenStationRepositoryImpl implements KitchenStationRepository {
             item.setUnitPrice(rs.getBigDecimal("unit_price"));
             item.setMenuItemId(rs.getInt("menu_item_id"));
             item.setQuantity(rs.getInt("quantity"));
-            item.setStatus(rs.getString("item_status"));
-            item.setKitchenStation(rs.getString("kitchen_station"));
+            item.setStatus(ItemStatus.valueOf(rs.getString("item_status")));
+            item.setKitchenStation(KitchenstationType.valueOf(rs.getString("kitchen_station")));
 
             MenuItemModel menu = new MenuItemModel();
             menu.setId(rs.getInt("menu_item_id"));
             menu.setName(rs.getString("menu_name"));
             menu.setImageUrl(rs.getString("image_url"));
-            menu.setCategory(rs.getString("category"));
+            menu.setCategory(MenuCategory.valueOf(rs.getString("category")));
             menu.setPrice(rs.getBigDecimal("menu_price"));
             item.setMenuItem(menu);
 
@@ -83,16 +87,16 @@ public class KitchenStationRepositoryImpl implements KitchenStationRepository {
     public int insertLog(KitchenLogModel kitchenLogModel) {
         String sql = """
             INSERT INTO kitchen_logs (order_item_id, station_id, status)
-            VALUES (?, ?, ?)
+            VALUES (?, ?, ?::log_status)
         """;
-        return jdbcTemplate.update(sql, kitchenLogModel.getOrderItemId(), kitchenLogModel.getStationId(), kitchenLogModel.getStatus());
+        return jdbcTemplate.update(sql, kitchenLogModel.getOrderItemId(), kitchenLogModel.getStationId(), kitchenLogModel.getStatus().name());
     }
 
     @Override
     public KitchenLogModel updateLogStatus(KitchenLogModel kitchenLogModel) {
-        String sql = "UPDATE kitchen_logs SET status = ? WHERE id = ?";
+        String sql = "UPDATE kitchen_logs SET status = ?::log_status WHERE id = ?";
 
-        int rows = jdbcTemplate.update(sql, kitchenLogModel.getStatus(), kitchenLogModel.getId());
+        int rows = jdbcTemplate.update(sql, kitchenLogModel.getStatus().name(), kitchenLogModel.getId());
 
         if (rows > 0) {
             return kitchenLogModel;

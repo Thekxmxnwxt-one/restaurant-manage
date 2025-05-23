@@ -1,5 +1,6 @@
 package com.example.cook.entity;
 
+import com.example.cook.enums.ItemStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,6 +25,9 @@ public class OrderItemsEntity {
     private MenuItemEntity menuItemId;
 
     private Integer quantity;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private ItemStatus status;
+
     private String kitchenStation;
 }

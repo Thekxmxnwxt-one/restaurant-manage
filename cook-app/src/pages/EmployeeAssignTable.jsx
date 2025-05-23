@@ -11,11 +11,9 @@ const AssignCustomer = () => {
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
 
-  const token = localStorage.getItem('token'); // ✅ ดึง token จาก localStorage
-  const authHeader = {
-    'Authorization': `Bearer ${token}`
-  };
 
+  const token = localStorage.getItem('token'); // ✅ ดึง token จาก localStorage
+  
   useEffect(() => {
     fetchTables();
     fetchActiveCustomers();
@@ -26,7 +24,7 @@ const AssignCustomer = () => {
       const res = await fetch('http://localhost:8080/api/tables');
       const data = await res.json();
       if (data.status === 200) {
-        const available = data.data.filter(t => t.status === 'available');
+        const available = data.data.filter(t => t.status === 'AVAILABLE');
         setTables(available);
       }
     } catch {
@@ -40,7 +38,7 @@ const AssignCustomer = () => {
       const data = await res.json();
 
       if (data.status === 200) {
-        const nonAvailableTables = data.data.filter(t => t.status !== 'available');
+        const nonAvailableTables = data.data.filter(t => t.status !== 'AVAILABLE');
 
         const detailedTables = await Promise.all(
           nonAvailableTables.map(async (t) => {
@@ -108,7 +106,7 @@ const AssignCustomer = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: parsedTableId,
-          status: 'not available',
+          status: 'NOT_AVAILABLE',
         }),
       });
 

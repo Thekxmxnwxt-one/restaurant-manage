@@ -1,5 +1,6 @@
 package com.example.cook.model;
 
+import com.example.cook.enums.MenuCategory;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -11,6 +12,6 @@ public class MenuItemModel {
     private String imageUrl;
     private String description;
     private BigDecimal price;
-    private String category;
+    private MenuCategory category;
     private Boolean available;
 }

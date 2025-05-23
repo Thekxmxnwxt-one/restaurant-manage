@@ -1,8 +1,8 @@
 package com.example.cook.service;
 
+import com.example.cook.exception.AlreadyExistsException;
+import com.example.cook.exception.NotFoundException;
 import com.example.cook.model.MenuItemModel;
-import com.example.cook.model.ResponseModel;
-import com.example.cook.model.TablesModel;
 import com.example.cook.repository.MenuNativeRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,97 +16,42 @@ public class MenuService {
         this.menuNativeRepository = menuNativeRepository;
     }
 
-    public ResponseModel<List<MenuItemModel>> getAllMenu(){
-        ResponseModel<List<MenuItemModel>> result = new ResponseModel<>();
-
-        result.setStatus(200);
-        result.setDescription("success");
-
-        try {
-            List<MenuItemModel> menu = this.menuNativeRepository.findAllMenu();
-            result.setData(menu);
-        } catch (Exception e) {
-            result.setStatus(500);
-            result.setDescription(e.getMessage());
-        }
-
-        return result;
+    public List<MenuItemModel> getAllMenu() {
+        return this.menuNativeRepository.findAllMenu();
     }
 
-    public ResponseModel<MenuItemModel> getMenuByMenuID(int menuID){
-        ResponseModel<MenuItemModel> result = new ResponseModel<>();
-
-        result.setStatus(200);
-        result.setDescription("success");
-
-        try {
-            MenuItemModel menu = this.menuNativeRepository.findMenuById(menuID);
-            result.setData(menu);
-        } catch (Exception e) {
-            result.setStatus(500);
-            result.setDescription(e.getMessage());
+    public MenuItemModel getMenuByMenuID(int menuID) {
+        MenuItemModel menu = this.menuNativeRepository.findMenuById(menuID);
+        if (menu == null) {
+            throw new NotFoundException("Menu item not found with id " + menuID);
         }
-
-        return result;
+        return menu;
     }
 
-    public ResponseModel<Integer> insertMenu(List<MenuItemModel> menuItemModels){
-        ResponseModel<Integer> result = new ResponseModel<>();
-
-        result.setStatus(201);
-        result.setDescription("ok");
-
-        try{
-            int insertedRows = this.menuNativeRepository.insertMenu(menuItemModels);
-            result.setData(insertedRows);
-        } catch (Exception e){
-            result.setStatus(500);
-            result.setDescription(e.getMessage());
-        }
-
-        return result;
-    }
-
-    public ResponseModel<MenuItemModel> updateMenu(MenuItemModel menuItemModel){
-        ResponseModel<MenuItemModel> result = new ResponseModel<>();
-
-        result.setStatus(201);
-        result.setDescription("ok");
-
-        try {
-            MenuItemModel updated = this.menuNativeRepository.updateMenu(menuItemModel);
-
-            if (updated != null) {
-                result.setStatus(200);
-                result.setDescription("Update table status success");
-                result.setData(updated);
-            } else {
-                result.setStatus(404);
-                result.setDescription("Table not found or update failed");
-                result.setData(null);
+    public int insertMenu(List<MenuItemModel> menuItemModels) {
+        // ตัวอย่างเช็ค duplicate ก่อน insert
+        for (MenuItemModel item : menuItemModels) {
+            MenuItemModel existing = this.menuNativeRepository.findMenuByName(item.getName());
+            if (existing != null) {
+                throw new AlreadyExistsException("Menu item already exists with name: " + item.getName());
             }
-        } catch (Exception e){
-            result.setStatus(500);
-            result.setDescription(e.getMessage());
         }
-
-        return result;
+        return this.menuNativeRepository.insertMenu(menuItemModels);
     }
 
-    public ResponseModel<String> deleteMenu(int id){
-        ResponseModel<String> result = new ResponseModel<>();
-
-        result.setStatus(201);
-        result.setDescription("ok");
-
-        try {
-            String deleteRows = this.menuNativeRepository.deleteMenu(id);
-            result.setData(deleteRows);
-        } catch (Exception e){
-            result.setStatus(500);
-            result.setDescription(e.getMessage());
+    public MenuItemModel updateMenu(MenuItemModel menuItemModel) {
+        MenuItemModel updated = this.menuNativeRepository.updateMenu(menuItemModel);
+        if (updated == null) {
+            throw new NotFoundException("Menu item not found or update failed for id " + menuItemModel.getId());
         }
+        return updated;
+    }
 
-        return result;
+    public String deleteMenu(int id) {
+        String deleted = this.menuNativeRepository.deleteMenu(id);
+        if (deleted == null || deleted.isEmpty()) {
+            throw new NotFoundException("Menu item not found or delete failed for id " + id);
+        }
+        return deleted;
     }
 }

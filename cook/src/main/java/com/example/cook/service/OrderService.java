@@ -1,194 +1,69 @@
 package com.example.cook.service;
 
-import com.example.cook.entity.OrdersEntity;
+import com.example.cook.exception.NotFoundException;
 import com.example.cook.model.*;
 import com.example.cook.repository.OrderNativeRepository;
-import org.apache.coyote.Response;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class OrderService {
-    private OrderNativeRepository orderNativeRepository;
+    private final OrderNativeRepository orderNativeRepository;
 
     public OrderService(OrderNativeRepository orderNativeRepository) {
         this.orderNativeRepository = orderNativeRepository;
     }
 
-    public ResponseModel<List<OrderModel>> getAllOrder(){
-        ResponseModel<List<OrderModel>> result = new ResponseModel<>();
-
-        result.setStatus(200);
-        result.setDescription("success");
-
-        try {
-            List<OrderModel> order = this.orderNativeRepository.findAllOrder();
-            result.setData(order);
-        } catch (Exception e) {
-            result.setStatus(500);
-            result.setDescription(e.getMessage());
-        }
-
-        return result;
-    }
-    public ResponseModel<OrderModel> getOrderByOrderID(int orderId){
-        ResponseModel<OrderModel> result = new ResponseModel<>();
-
-        result.setStatus(200);
-        result.setDescription("success");
-
-        try {
-            OrderModel order = this.orderNativeRepository.findOrderById(orderId);
-            result.setData(order);
-        } catch (Exception e) {
-            result.setStatus(500);
-            result.setDescription(e.getMessage());
-        }
-
-        return result;
+    public List<OrderModel> getAllOrder() {
+        return orderNativeRepository.findAllOrder();
     }
 
-    public ResponseModel<Integer> insertOrder(OrderModel orderModel){
-        ResponseModel<Integer> result = new ResponseModel<>();
-
-        result.setStatus(201);
-        result.setDescription("ok");
-
-        try{
-            int insertedRows = this.orderNativeRepository.insertOrder(orderModel);
-            result.setData(insertedRows);
-        } catch (Exception e){
-            result.setStatus(500);
-            result.setDescription(e.getMessage());
+    public OrderModel getOrderByOrderID(int orderId) {
+        OrderModel order = orderNativeRepository.findOrderById(orderId);
+        if (order == null) {
+            throw new NotFoundException("Order id " + orderId + " not found.");
         }
-
-        return result;
+        return order;
     }
 
-    public ResponseModel<OrderModel> updateOrder(OrderModel orderModel){
-        ResponseModel<OrderModel> result = new ResponseModel<>();
-
-        try {
-            OrderModel updated = this.orderNativeRepository.updateOrder(orderModel);
-
-            if (updated != null) {
-                result.setStatus(200);
-                result.setDescription("Update order status success");
-                result.setData(updated);
-            } else {
-                result.setStatus(404);
-                result.setDescription("Table not found or update failed");
-                result.setData(null);
-            }
-        } catch (Exception e){
-            result.setStatus(500);
-            result.setDescription(e.getMessage());
-        }
-
-        return result;
+    public int insertOrder(OrderModel orderModel) {
+        return orderNativeRepository.insertOrder(orderModel);
     }
 
-    public ResponseModel<String> deleteOrder(int id){
-        ResponseModel<String> result = new ResponseModel<>();
-
-        result.setStatus(200);
-        result.setDescription("ok");
-
-        try {
-            String deleteRows = this.orderNativeRepository.deleteOrder(id);
-            result.setData(deleteRows);
-        } catch (Exception e){
-            result.setStatus(500);
-            result.setDescription(e.getMessage());
+    public OrderModel updateOrder(OrderModel orderModel) {
+        OrderModel updated = orderNativeRepository.updateOrder(orderModel);
+        if (updated == null) {
+            throw new NotFoundException("Order not found or update failed.");
         }
-
-        return result;
+        return updated;
     }
 
-    public ResponseModel<Integer> insertOrderItem(OrderItemModel orderItemModel){
-        ResponseModel<Integer> result = new ResponseModel<>();
-
-        result.setStatus(201);
-        result.setDescription("ok");
-
-        try{
-            int insertedRows = this.orderNativeRepository.insertOrderItem(orderItemModel);
-            result.setData(insertedRows);
-        } catch (Exception e){
-            result.setStatus(500);
-            result.setDescription(e.getMessage());
-        }
-
-        return result;
+    public String deleteOrder(int id) {
+        return orderNativeRepository.deleteOrder(id);
     }
 
-    public ResponseModel<OrderItemModel> updateOrderItem(OrderItemModel orderItemModel){
-        ResponseModel<OrderItemModel> result = new ResponseModel<>();
-
-        result.setStatus(201);
-        result.setDescription("ok");
-
-        try {
-            OrderItemModel updated = this.orderNativeRepository.updateOrderItems(orderItemModel);
-
-            if (updated != null) {
-                result.setStatus(200);
-                result.setDescription("Update order item success");
-                result.setData(updated);
-            } else {
-                result.setStatus(404);
-                result.setDescription("Table not found or update failed");
-                result.setData(null);
-            }
-        } catch (Exception e){
-            result.setStatus(500);
-            result.setDescription(e.getMessage());
-        }
-
-        return result;
+    public int insertOrderItem(OrderItemModel orderItemModel) {
+        return orderNativeRepository.insertOrderItem(orderItemModel);
     }
 
-    public ResponseModel<String> deleteOrderItem(int id){
-        ResponseModel<String> result = new ResponseModel<>();
-
-        result.setStatus(200);
-        result.setDescription("ok");
-
-        try {
-            String deleteRows = this.orderNativeRepository.deleteOrderItem(id);
-            result.setData(deleteRows);
-        } catch (Exception e){
-            result.setStatus(500);
-            result.setDescription(e.getMessage());
+    public OrderItemModel updateOrderItem(OrderItemModel orderItemModel) {
+        OrderItemModel updated = orderNativeRepository.updateOrderItems(orderItemModel);
+        if (updated == null) {
+            throw new NotFoundException("Order item not found or update failed.");
         }
-
-        return result;
+        return updated;
     }
 
-    public ResponseModel<OrderItemModel> updateOrderItemStatus(OrderItemModel orderItemModel){
-        ResponseModel<OrderItemModel> result = new ResponseModel<>();
+    public String deleteOrderItem(int id) {
+        return orderNativeRepository.deleteOrderItem(id);
+    }
 
-        result.setStatus(201);
-        result.setDescription("ok");
-
-        try {
-            OrderItemModel updated = this.orderNativeRepository.updateOrderItemsStatus(orderItemModel);
-
-            if (updated != null) {
-                result.setStatus(200);
-                result.setDescription("Update order item status success");
-                result.setData(updated);
-            } else {
-                result.setStatus(404);
-                result.setDescription("Table not found or update failed");
-                result.setData(null);
-            }
-        } catch (Exception e){
-            result.setStatus(500);
-            result.setDescription(e.getMessage());
+    public OrderItemModel updateOrderItemStatus(OrderItemModel orderItemModel) {
+        OrderItemModel updated = orderNativeRepository.updateOrderItemsStatus(orderItemModel);
+        if (updated == null) {
+            throw new NotFoundException("Order item status not found or update failed.");
         }
-
-        return result;
+        return updated;
     }
 }

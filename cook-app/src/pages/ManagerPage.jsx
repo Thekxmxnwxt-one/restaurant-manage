@@ -243,7 +243,7 @@ const handleUpdateEmployee = async (e) => {
     const postData = [
       {
         tableNumber: parseInt(newTableName.trim(), 10),
-        status: 'available'
+        status: 'AVAILABLE'
       }
     ];
     const res = await axios.post('http://localhost:8080/api/manager/tables', postData,
@@ -280,6 +280,13 @@ const handleUpdateEmployee = async (e) => {
       console.error('Error deleting table', error);
     }
   };
+
+  useEffect(() => {
+  if (!token) {
+    navigate('/');
+  }
+}, [token, navigate]);
+
 
   useEffect(() => {
     fetchEmployees();

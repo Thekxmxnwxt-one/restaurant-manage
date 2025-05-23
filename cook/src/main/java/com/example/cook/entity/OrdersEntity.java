@@ -1,5 +1,6 @@
 package com.example.cook.entity;
 
+import com.example.cook.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,7 +32,8 @@ public class OrdersEntity {
     @Column(name = "ordered_at", updatable = false)
     private LocalDateTime orderedAt;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     @CreationTimestamp
     @Column(name = "closed_at", updatable = false)

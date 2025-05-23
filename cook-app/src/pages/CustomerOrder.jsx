@@ -107,7 +107,7 @@ const MenuPage = () => {
     if (data.status === 200 && Array.isArray(data.data) && data.data.length > 0) {
       // ค้นหา order ที่ customerId ตรงกับตัวแปร customerId จริง ๆ
       const foundOrder = data.data.find(order => order.customerId === customerId);
-      return foundOrder || null; // ถ้าไม่เจอ คืน null
+      return foundOrder || null;
     } else {
       return null;
     }
@@ -145,7 +145,6 @@ const MenuPage = () => {
 
     let orderId = null;
 
-    // *** ถ้าต้องการสร้าง order ใหม่ทุกครั้ง ให้คอมเมนต์บรรทัดนี้ออก ***
     const existingOrder = await fetchPendingOrderByCustomer(customer.id);
     console.log('Existing pending order:', existingOrder);
     if (existingOrder) {
@@ -188,7 +187,7 @@ const MenuPage = () => {
       console.log('Response จากการสร้าง order:', orderData);
 
       if (orderData.status !== 201) {
-        setError(`สร้างคำสั่งซื้อไม่สำเร็จ: ${orderData.description || 'Unknown error'}`);
+        setError(`สร้างคำสั่งซื้อไม่สำเร็จ: ไม่พบลูกค้าโต๊ะนี้ค่ะ`);
         setOrderLoading(false);
         return;
       }
@@ -219,7 +218,7 @@ const MenuPage = () => {
       const itemData = await itemRes.json();
 
       if (itemData.status !== 201) {
-        setError(`เพิ่มรายการอาหารไม่สำเร็จ: ${itemData.description || 'Unknown error'}`);
+        setError(`เพิ่มรายการอาหารสำเร็จ: ${itemData.description || 'Unknown error'}`);
         setOrderLoading(false);
         return;
       }

@@ -10,21 +10,21 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-  e.preventDefault();
-  setError('');
-  try {
-    const response = await fetch('http://localhost:8080/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
-    });
+    e.preventDefault();
+    setError('');
+    try {
+      const response = await fetch('http://localhost:8080/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
 
-    if (!response.ok) {
+      if (!response.ok) {
         setError('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
         return;
       }
 
-     const data = await response.json();
+      const data = await response.json();
 
       if (data.status === 200) {
         const token = data.data.token;
@@ -52,7 +52,6 @@ function Login() {
       setError('เกิดข้อผิดพลาดในการเชื่อมต่อ');
     }
   };
-
 
   return (
     <div className="login-container">
@@ -88,6 +87,17 @@ function Login() {
             <button type="submit">Sign in</button>
           </div>
         </form>
+
+        {/* ปุ่ม Register */}
+        <div className="register-section">
+          <span>ยังไม่มีบัญชี? </span>
+          <button
+            type="button"
+            onClick={() => navigate('/register')}
+          >
+            สมัครสมาชิก
+          </button>
+        </div>
       </div>
     </div>
   );

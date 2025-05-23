@@ -7,4 +7,6 @@ import com.example.cook.model.UsersModel;
 public interface UserNativeRepository {
     public UsersModel findByUsername(String username);
     public EmployeesModel findEmployeeById(int employeeId);
+    public int insertEmployeeWithUser(EmployeesModel employeesModel, String username, String rawPassword);
+    public boolean existsByUsername(String username);
 }

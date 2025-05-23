@@ -2,6 +2,8 @@ package com.example.cook.model;
 
 import com.example.cook.entity.MenuItemEntity;
 import com.example.cook.entity.OrdersEntity;
+import com.example.cook.enums.ItemStatus;
+import com.example.cook.enums.KitchenstationType;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,7 +16,7 @@ public class OrderItemModel {
     private BigDecimal unitPrice;
     private int menuItemId;
     private Integer quantity;
-    private String status;
-    private String kitchenStation;
+    private ItemStatus status;
+    private KitchenstationType kitchenStation;
     private MenuItemModel menuItem;
 }

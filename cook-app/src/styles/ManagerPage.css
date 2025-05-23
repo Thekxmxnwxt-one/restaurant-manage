@@ -199,6 +199,18 @@ h2 {
   margin: 0;
 }
 
+.list input{
+  color: #000000;
+}
+
+.list select{
+  color: #000000;
+}
+
+.list option {
+  color: #000000;
+}
+
 .employee .list input {
   background-color: #ffffff;
   color: #000000;

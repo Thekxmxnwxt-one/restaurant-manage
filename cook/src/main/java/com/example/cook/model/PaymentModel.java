@@ -1,6 +1,7 @@
 package com.example.cook.model;
 
 import com.example.cook.entity.OrdersEntity;
+import com.example.cook.enums.PaymentMethod;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -15,7 +16,7 @@ public class PaymentModel {
     private int id;
     private int orderId;
     private BigDecimal amount;
-    private String method;
+    private PaymentMethod method;
     private LocalDateTime paidAt;
     private OrderModel order;
 

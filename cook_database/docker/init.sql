@@ -1,16 +1,27 @@
+CREATE TYPE table_status AS ENUM ('available', 'not available');
+CREATE TYPE customer_status AS ENUM ('waiting', 'seated', 'done');
+CREATE TYPE menu_category AS ENUM ('เซต', 'ราเมง', 'เบนโตะ', 'เครื่องดื่ม', 'ของหวาน');
+CREATE TYPE employee_role AS ENUM ('chef','waitress', 'manager');
+CREATE TYPE order_status AS ENUM ('pending', 'processing', 'served', 'cancelled');
+CREATE TYPE item_status AS ENUM ('pending', 'cooking', 'ready', 'served');
+CREATE TYPE kitchen_station_type AS ENUM ('เซต', 'ราเมง', 'เบนโตะ', 'เครื่องดื่ม', 'ของหวาน');
+CREATE TYPE log_status AS ENUM ('cooking', 'done');
+CREATE TYPE payment_method AS ENUM ('cash', 'credit_card', 'mobile_payment');
+
 -- ตารางโต๊ะ
 CREATE TABLE tables (
     id SERIAL PRIMARY KEY,
     table_number INT NOT NULL UNIQUE, 
-    status VARCHAR(20) CHECK (status IN ('available', 'not available')) DEFAULT 'available'
+    status table_status DEFAULT 'available'
 );
+
 -- ลูกค้า
 CREATE TABLE customers (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100),
     phone VARCHAR(20),
     table_id INT REFERENCES tables(id),
-    status VARCHAR(20) CHECK (status IN ('waiting', 'seated', 'done')) DEFAULT 'waiting',
+    status customer_status DEFAULT 'waiting',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -21,7 +32,7 @@ CREATE TABLE menu_items (
     image_url TEXT,
     description TEXT,
     price DECIMAL(10, 2) NOT NULL,
-    category VARCHAR(20) CHECK (category IN ('เซต', 'ราเมง', 'เบนโตะ', 'เครื่องดื่ม', 'ของหวาน')),
+    category menu_category,
     available BOOLEAN DEFAULT TRUE
 );
 
@@ -29,9 +40,10 @@ CREATE TABLE menu_items (
 CREATE TABLE employees (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    role VARCHAR(20) CHECK (role IN ('chef','waitress', 'manager')) NOT NULL
+    role employee_role NOT NULL
 );
 
+-- ผู้ใช้ระบบ
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -40,54 +52,53 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- ออเดอร์
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
     customer_id INT REFERENCES customers(id),
     table_id INT REFERENCES tables(id),
     employee_id INT NULL,
     ordered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status VARCHAR(20) CHECK (status IN ('pending', 'processing', 'served', 'cancelled')) DEFAULT 'pending',
+    status order_status DEFAULT 'pending',
     closed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    -- ใส่ FOREIGN KEY แยก เพื่อกำหนด ON DELETE SET NULL
     CONSTRAINT fk_employee
         FOREIGN KEY (employee_id)
         REFERENCES employees(id)
         ON DELETE SET NULL
 );
 
-
--- รายการอาหารในแต่ละ order
+-- รายการอาหารในออเดอร์
 CREATE TABLE order_items (
     id SERIAL PRIMARY KEY,
     order_id INT REFERENCES orders(id) ON DELETE CASCADE,
     unit_price DECIMAL(10,2),
     menu_item_id INT REFERENCES menu_items(id),
     quantity INT NOT NULL CHECK (quantity > 0),
-    status VARCHAR(20) CHECK (status IN ('pending', 'cooking', 'ready', 'served')) DEFAULT 'pending',
-    kitchen_station VARCHAR(20) CHECK (kitchen_station IN ('เซต', 'ราเมง', 'เบนโตะ', 'เครื่องดื่ม', 'ของหวาน'))
+    status item_status DEFAULT 'pending',
+    kitchen_station kitchen_station_type
 );
 
--- สถานีครัว (กรณีมีข้อมูลแยก)
+-- สถานีครัว
 CREATE TABLE kitchen_stations (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(20) CHECK (name IN ('เซต', 'ราเมง', 'เบนโตะ', 'เครื่องดื่ม', 'ของหวาน')) UNIQUE NOT NULL
+    name kitchen_station_type UNIQUE NOT NULL
 );
 
--- Log สำหรับการปรุงอาหาร (optional)
+-- Log การปรุงอาหาร
 CREATE TABLE kitchen_logs (
     id SERIAL PRIMARY KEY,
     order_item_id INT REFERENCES order_items(id) ON DELETE CASCADE,
     station_id INT REFERENCES kitchen_stations(id),
-    status VARCHAR(20) CHECK (status IN ('cooking', 'done')) NOT NULL,
+    status log_status NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- การชำระเงิน
 CREATE TABLE payments (
     id SERIAL PRIMARY KEY,
     order_id INT REFERENCES orders(id),
     amount DECIMAL(10,2) NOT NULL,
-    method VARCHAR(20) CHECK (method IN ('cash', 'credit_card', 'mobile_payment')),
+    method payment_method,
     paid_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -133,19 +144,9 @@ INSERT INTO menu_items (name, image_url, description, price, category, available
 
 -- ตัวอย่างข้อมูล employees
 INSERT INTO employees (name, role) VALUES
-('สมชาย ภักดีไทย', 'waitress'),
+('กมลวัทน์ โตรักษา', 'waitress'),
 ('อรวรรณ ศรีสวัสดิ์', 'chef'),
-('วิทยา พิทักษ์ผล', 'chef'),
-('ศิริพร แซ่ลี้', 'waitress'),
 ('ปวีณา ทองมาก', 'manager');
-
--- เพิ่ม user login สำหรับแต่ละพนักงาน
-INSERT INTO users (username, password, employee_id) VALUES
-('somchai01', 'pass1234', 1),
-('orawan02', 'pass2345', 2),
-('withaya03', 'pass3456', 3),
-('siriporn04', 'pass4567', 4),
-('paweena05', 'pass5678', 5);
 
 -- ตัวอย่างข้อมูล kitchen_stations
 INSERT INTO kitchen_stations (name) VALUES

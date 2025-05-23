@@ -67,6 +67,23 @@ input::placeholder {
   color: #cccccc;
 }
 
+.form-group button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007be5;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.form-group button:hover {
+  background-color: #004aad;
+}
+
 button {
   width: 100%;
   padding: 12px;
@@ -93,4 +110,33 @@ button:hover {
   color: #ffffff;
   text-decoration: underline;
   font-size: 14px;
+}
+
+.register-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.register-section span {
+  color: #ffffff;
+}
+
+.register-section button {
+  background-color: transparent;
+  border: 2px solid #f0dd36;
+  color: #f0dd36;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 10px 25px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(205, 69, 69, 0.3);
+}
+
+.register-section button:hover {
+  background-color: #f0dd36;
+  color: #fff;
+  box-shadow: 0 6px 12px #625800;
+  transform: translateY(-2px);
 }

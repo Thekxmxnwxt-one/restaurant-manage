@@ -1,8 +1,10 @@
 package com.example.cook.repository.impl;
 
+import com.example.cook.enums.MenuCategory;
 import com.example.cook.model.MenuItemModel;
 import com.example.cook.model.TablesModel;
 import com.example.cook.repository.MenuNativeRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -33,7 +35,7 @@ public class MenuRepositoryImpl implements MenuNativeRepository {
                 model.setImageUrl(rs.getString("image_url"));
                 model.setDescription(rs.getString("description"));
                 model.setPrice(rs.getBigDecimal("price"));
-                model.setCategory(rs.getString("category"));
+                model.setCategory(MenuCategory.fromDisplayName(rs.getString("category")));
                 model.setAvailable(rs.getBoolean("available"));
                 return model;
             }
@@ -53,7 +55,7 @@ public class MenuRepositoryImpl implements MenuNativeRepository {
                 model.setImageUrl(rs.getString("image_url"));
                 model.setDescription(rs.getString("description"));
                 model.setPrice(rs.getBigDecimal("price"));
-                model.setCategory(rs.getString("category"));
+                model.setCategory(MenuCategory.fromDisplayName(rs.getString("category")));
                 model.setAvailable(rs.getBoolean("available"));
                 return model;
             }
@@ -68,12 +70,12 @@ public class MenuRepositoryImpl implements MenuNativeRepository {
 
         StringJoiner stringJoiner = new StringJoiner(",");
         for (MenuItemModel m : menuItemModels){
-            String value = " (?, ?, ?, ?, ?, ?) ";
+            String value = " (?, ?, ?, ?, ?::menu_category, ?) ";
             paramList.add(m.getName());
             paramList.add(m.getImageUrl());
             paramList.add(m.getDescription());
             paramList.add(m.getPrice());
-            paramList.add(m.getCategory());
+            paramList.add(m.getCategory().getDisplayName());
             paramList.add(m.getAvailable());
             stringJoiner.add(value);
         }
@@ -105,9 +107,9 @@ public class MenuRepositoryImpl implements MenuNativeRepository {
             sql.append("price = ?, ");
             params.add(menuItemModel.getPrice());
         }
-        if (menuItemModel.getCategory() != null) {
-            sql.append("category = ?, ");
-            params.add(menuItemModel.getCategory());
+        if (menuItemModel.getCategory().name() != null) {
+            sql.append("category = ?::menu_category, ");
+            params.add(menuItemModel.getCategory().name());
         }
         if (menuItemModel.getAvailable() != null) {
             sql.append("available = ?, ");
@@ -134,6 +136,24 @@ public class MenuRepositoryImpl implements MenuNativeRepository {
             return "Delete success";
         } else {
             return "Menu not found or already deleted";
+        }
+    }
+
+    @Override
+    public MenuItemModel findMenuByName(String name) {
+        String sql = "SELECT * FROM menu WHERE name = ? LIMIT 1";
+
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{name}, (rs, rowNum) -> {
+                MenuItemModel menu = new MenuItemModel();
+                menu.setId(rs.getInt("id"));
+                menu.setName(rs.getString("name"));
+                menu.setPrice(rs.getBigDecimal("price"));
+                // set field อื่น ๆ ตาม model
+                return menu;
+            });
+        } catch (EmptyResultDataAccessException e) {
+            return null; // ไม่เจอเมนูที่ชื่อซ้ำ
         }
     }
 
