@@ -29,7 +29,6 @@ public class MenuService {
     }
 
     public int insertMenu(List<MenuItemModel> menuItemModels) {
-        // ตัวอย่างเช็ค duplicate ก่อน insert
         for (MenuItemModel item : menuItemModels) {
             MenuItemModel existing = this.menuNativeRepository.findMenuByName(item.getName());
             if (existing != null) {

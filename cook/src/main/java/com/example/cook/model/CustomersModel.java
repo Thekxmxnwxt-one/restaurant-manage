@@ -20,4 +20,6 @@ public class CustomersModel {
     private LocalDateTime createdAt;
     private String message;
     private TablesModel tablesModel;
+    private OrderModel orderModel;
+    private OrderItemModel orderItemModel;
 }

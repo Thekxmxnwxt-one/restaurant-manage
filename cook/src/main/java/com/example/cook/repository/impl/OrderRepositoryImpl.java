@@ -65,7 +65,6 @@ public class OrderRepositoryImpl implements OrderNativeRepository {
                 order.setClosedAt(closedAt.toLocalDateTime());
             }
 
-            // เพิ่มข้อมูลลูกค้า
             CustomersModel customer = new CustomersModel();
             customer.setId(rs.getInt("customer_id"));
             customer.setName(rs.getString("customer_name"));
@@ -74,7 +73,6 @@ public class OrderRepositoryImpl implements OrderNativeRepository {
             customer.setTablesId(rs.getInt("table_id"));
             order.setCustomer(customer);
 
-            // เพิ่มข้อมูลโต๊ะ
             TablesModel table = new TablesModel();
             table.setId(rs.getInt("table_id"));
             table.setTableNumber(rs.getInt("table_number"));
@@ -82,7 +80,6 @@ public class OrderRepositoryImpl implements OrderNativeRepository {
 
             order.setTable(table);
 
-            // เพิ่มข้อมูลพนักงาน
             EmployeesModel employee = new EmployeesModel();
             employee.setId(rs.getInt("employee_id"));
             employee.setName(rs.getString("employee_name"));
