@@ -9,4 +9,6 @@ public interface ReportCustomRepository {
     public Connection getConnection();
 
     public OrderModel findOrderByOrderId(int orderId);
+
+    public OrderModel findOrderById(int orderId);
 }

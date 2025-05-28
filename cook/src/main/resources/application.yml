@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/cookdatabase
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+jwt:
+  secret: mysecretkey123456789012345678901234567890
+
+app:
+  jasperFolder: /app/jasper
+  jasperFile: /restaurant_report.jasper
