@@ -1,11 +1,10 @@
 package com.example.cook.report.service;
 
-import com.example.cook.model.MenuItemModel;
 import com.example.cook.model.OrderItemModel;
 import com.example.cook.model.OrderModel;
-import com.example.cook.model.ResponseModel;
+import com.example.cook.report.exception.ExcelGenerationException;
+import com.example.cook.report.exception.PdfGenerationException;
 import com.example.cook.report.repository.ReportCustomRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -22,16 +21,16 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
 @Slf4j
-public class JasperGeneratorService {
+public class GeneratorReportService {
 
 
     @Value("${app.jasperFile}")
@@ -41,145 +40,86 @@ public class JasperGeneratorService {
 
     private ReportCustomRepository reportCustomRepository;
 
-    public JasperGeneratorService(ReportCustomRepository reportCustomRepository) {
+    public GeneratorReportService(ReportCustomRepository reportCustomRepository) {
         this.reportCustomRepository = reportCustomRepository;
     }
 
-    public void getPdf(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-
+    public void getPdf(HttpServletRequest request, HttpServletResponse response) {
         log.info("getPdf");
+
         try {
-
-
-            String orderIdStr = httpServletRequest.getParameter("orderId");
+            String orderIdStr = request.getParameter("orderId");
             if (orderIdStr == null || orderIdStr.isEmpty()) {
-                throw new IllegalArgumentException("Missing orderId parameter");
+                throw new PdfGenerationException("Missing orderId parameter");
             }
 
             Integer orderId = Integer.valueOf(orderIdStr);
 
+            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setHeader("Content-Disposition", "attachment; filename=normal" + new Date().getTime() + ".pdf");
 
-            httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-            httpServletResponse.setHeader("Content-Disposition"
-                    , "attachment; filename=" + "normal" + new Date().getTime() + ".pdf");
-            OutputStream outputStream = httpServletResponse.getOutputStream();
             String jasperFile = this.jasperFolder + this.jasperFile;
 
-            Map<String, Object> parameters = new HashMap();
+            Map<String, Object> parameters = new HashMap<>();
             parameters.put("order_id", orderId);
             parameters.put("jasper_folder", this.jasperFolder);
 
-            outputStream.write(this.generateCustomerReport(jasperFile, parameters));
-            outputStream.flush();
+            byte[] pdfBytes = generateCustomerReport(jasperFile, parameters);
+            try (OutputStream outputStream = response.getOutputStream()) {
+                outputStream.write(pdfBytes);
+                outputStream.flush();
+            }
 
         } catch (Exception e) {
-            log.info("getPdf error {}", e.getMessage());
-
-            ResponseModel<Void> result = new ResponseModel<>();
-            result.setStatus(500);
-            result.setDescription("getPdf error " + e.getMessage());
-            ObjectMapper mapper = new ObjectMapper();
-            httpServletResponse.setHeader("Content-Disposition"
-                    , "inline");
-            httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            OutputStream outputStream = null;
-            try {
-                outputStream = httpServletResponse.getOutputStream();
-                outputStream.write(mapper.writeValueAsBytes(result));
-                outputStream.flush();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            throw new PdfGenerationException("Failed to generate PDF: " + e.getMessage(), e);
         }
     }
 
-    private byte[] generateCustomerReport(String jasperFile, Map<String, Object> parameters) throws FileNotFoundException {
-
-        Connection connection = this.reportCustomRepository.getConnection();
-        byte[] r = new byte[1024];
-        if (connection != null) {
+    private byte[] generateCustomerReport(String jasperFile, Map<String, Object> parameters) {
+        try (
+                Connection connection = reportCustomRepository.getConnection();
+                FileInputStream fis = new FileInputStream(jasperFile)
+        ) {
             Instant start = Instant.now();
-            log.info("start time ");
+            log.info("start time");
 
-            FileInputStream fis = null;
-            InputStream inputStream = null;
-            JasperPrint jasperPrint = null;
-            try {
-                fis = new FileInputStream(jasperFile);
-                inputStream = fis;
-                jasperPrint = JasperFillManager.fillReport(inputStream, parameters, connection);
-                r = JasperExportManager.exportReportToPdf(jasperPrint);
-                Instant finish = Instant.now();
-                long timeElapsed = Duration.between(start, finish).toMillis();
-                log.info("total time {}",timeElapsed);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                throw e;
-            } catch (JRException e) {
-                e.printStackTrace();
-            } finally {
-                if (inputStream != null) {
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+            JasperPrint jasperPrint = JasperFillManager.fillReport(fis, parameters, connection);
+            byte[] r = JasperExportManager.exportReportToPdf(jasperPrint);
+
+            long timeElapsed = Duration.between(start, Instant.now()).toMillis();
+            log.info("total time {}", timeElapsed);
+
+            return r;
+
+        } catch (FileNotFoundException e) {
+            throw new PdfGenerationException("Jasper file not found: " + jasperFile, e);
+        } catch (JRException | SQLException | IOException e) {
+            throw new PdfGenerationException("Error while generating report", e);
         }
-        return r;
     }
 
-    public void getCsv(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
-
-        String orderIdStr = httpServletRequest.getParameter("orderId");
+    public void getCsv(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String orderIdStr = request.getParameter("orderId");
         if (orderIdStr == null || orderIdStr.isEmpty()) {
             throw new IllegalArgumentException("Missing orderId parameter");
         }
 
-        Integer orderId = Integer.valueOf(orderIdStr);
+        int orderId = Integer.parseInt(orderIdStr);
 
-        try{
-            httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-            httpServletResponse.setHeader("Content-Disposition"
-                    , "attachment; filename=" + "csv"+ new Date().getTime()+".csv");
-            OutputStream outputStream = httpServletResponse.getOutputStream();
+        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setHeader("Content-Disposition", "attachment; filename=csv" + new Date().getTime() + ".csv");
 
-            this.generateCustomerReportCsv(orderId, outputStream);
-
-        } catch (Exception e) {
-
-            ResponseModel<Void> result = new ResponseModel<>();
-            result.setStatus(500);
-            result.setDescription("getCsv error "+e.getMessage());
-            ObjectMapper mapper = new ObjectMapper();
-            httpServletResponse.setHeader("Content-Disposition"
-                    , "inline");
-            httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            OutputStream outputStream = null;
-            try {
-                outputStream = httpServletResponse.getOutputStream();
-                outputStream.write(mapper.writeValueAsBytes(result));
-                outputStream.flush();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+        OutputStream outputStream = response.getOutputStream();
+        generateCustomerReportCsv(orderId, outputStream); // ถ้า error จะถูก Global handler จัดการ
     }
 
     public void generateCustomerReportCsv(int orderId, OutputStream outputStream) throws IOException {
-        // เขียน BOM UTF-8 3 ไบต์ ช่วยให้ Excel อ่าน encoding ถูกต้อง
         outputStream.write(new byte[] {(byte)0xEF, (byte)0xBB, (byte)0xBF});
 
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
 
-        // Header
         String header = String.format("%s|%s|%s|%s|%s|%s|%s|%s|%s",
                 "name", "phone", "tableNo", "name employee", "orderID", "orderedAt", "menu_name", "quantity", "price") + "\n";
         writer.write(header);
@@ -203,7 +143,7 @@ public class JasperGeneratorService {
 
                 writer.write(data);
                 if (i % 20 == 0) {
-                    writer.flush();  // flush writer แทน outputStream
+                    writer.flush();
                 }
             }
             writer.flush();
@@ -218,39 +158,21 @@ public class JasperGeneratorService {
 
     public void getExcel(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         log.info("getExcel");
+
         try {
-            httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-            httpServletResponse.setHeader("Content-Disposition"
-                    , "attachment; filename=" + "excel" + new Date().getTime() + ".xlsx");
-
-            OutputStream outputStream = httpServletResponse.getOutputStream();
-
             int orderId = Integer.parseInt(httpServletRequest.getParameter("orderId"));
             Workbook wb = this.generateCustomerReportExcel(orderId);
 
+            httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+            httpServletResponse.setHeader("Content-Disposition", "attachment; filename=excel" + new Date().getTime() + ".xlsx");
+
+            OutputStream outputStream = httpServletResponse.getOutputStream();
             wb.write(outputStream);
             outputStream.flush();
-
         } catch (Exception e) {
-            log.info("getExcel error {}", e.getMessage());
-
-            ResponseModel<Void> result = new ResponseModel<>();
-            result.setStatus(500);
-            result.setDescription("getExcel error " + e.getMessage());
-            ObjectMapper mapper = new ObjectMapper();
-            httpServletResponse.setHeader("Content-Disposition"
-                    , "inline");
-            httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
-            try {
-                OutputStream outputStream = httpServletResponse.getOutputStream();
-                outputStream.write(mapper.writeValueAsBytes(result));
-                outputStream.flush();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            log.error("Excel generation failed", e);
+            throw new ExcelGenerationException("Failed to generate Excel report", e);
         }
     }
 

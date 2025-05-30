@@ -1,6 +1,6 @@
 package com.example.cook.report.controller;
 
-import com.example.cook.report.service.JasperGeneratorService;
+import com.example.cook.report.service.GeneratorReportService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -11,25 +11,25 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 public class ReportController {
-    private JasperGeneratorService jasperGeneratorService;
+    private GeneratorReportService generatorReportService;
 
-    public ReportController(JasperGeneratorService jasperGeneratorService) {
-        this.jasperGeneratorService = jasperGeneratorService;
+    public ReportController(GeneratorReportService generatorReportService) {
+        this.generatorReportService = generatorReportService;
     }
 
     @GetMapping("/generate/normal/pdf")
     public void getNormalPdf(@RequestParam("orderId") String orderId
-            , HttpServletRequest request, HttpServletResponse response) {
-        this.jasperGeneratorService.getPdf(request, response);
+            , HttpServletRequest request, HttpServletResponse response) throws Exception {
+        this.generatorReportService.getPdf(request, response);
     }
 
     @GetMapping("/generate/normal/csv")
-    public void getNormalCsv(HttpServletRequest request, HttpServletResponse response) {
-        this.jasperGeneratorService.getCsv(request, response);
+    public void getNormalCsv(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        this.generatorReportService.getCsv(request, response);
     }
 
     @GetMapping("/generate/normal/excel")
-    public void getNormalExcel(HttpServletRequest request, HttpServletResponse response) {
-        this.jasperGeneratorService.getExcel(request, response);
+    public void getNormalExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        this.generatorReportService.getExcel(request, response);
     }
 }

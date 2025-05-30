@@ -88,7 +88,7 @@ WHERE o.id = $P{order_id}]]>
             <staticText>
                 <reportElement x="179" y="18" width="196" height="30"  uuid="b870b1c7-423f-4fcf-bb9a-ef067ad55257"/>
                 <textElement textAlignment="Center">
-                    <font fontName="SansSerif" size="14" />
+                    <font fontName="TH Sarabun New" size="16" />
                 </textElement>
                 <text><![CDATA[Customer Order Report]]></text>
             </staticText>
@@ -112,7 +112,9 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle" />
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <text><![CDATA[name]]></text>
             </staticText>
             <staticText>
@@ -125,7 +127,9 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <text><![CDATA[phone]]></text>
             </staticText>
             <staticText>
@@ -138,7 +142,9 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <text><![CDATA[tableNo]]></text>
             </staticText>
             <staticText>
@@ -151,7 +157,9 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <text><![CDATA[name employee]]></text>
             </staticText>
             <staticText>
@@ -164,7 +172,9 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <text><![CDATA[orderID]]></text>
             </staticText>
             <staticText>
@@ -177,7 +187,9 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <text><![CDATA[orderedAt]]></text>
             </staticText>
             <staticText>
@@ -190,7 +202,9 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <text><![CDATA[menu_name]]></text>
             </staticText>
             <staticText>
@@ -203,7 +217,9 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <text><![CDATA[quantity]]></text>
             </staticText>
             <staticText>
@@ -216,7 +232,9 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <text><![CDATA[price]]></text>
             </staticText>
         </band>
@@ -225,7 +243,7 @@ WHERE o.id = $P{order_id}]]>
     <detail>
         <band height="125" splitType="Stretch">
             <textField>
-                <reportElement x="0" y="0" width="65" height="40" uuid="f0b1bedb-57ec-4b1c-93eb-68610f6745dd">
+                <reportElement x="0" y="0" width="65" height="30" uuid="f0b1bedb-57ec-4b1c-93eb-68610f6745dd">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bd5eafc4-0d1e-4cbb-a149-084231c6dd93"/>
                 </reportElement>
                 <box padding="5">
@@ -234,10 +252,13 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="65" y="0" width="70" height="40" uuid="13f53d50-d50e-442d-aa11-1f4ee5c7e313">
+                <reportElement x="65" y="0" width="70" height="30" uuid="13f53d50-d50e-442d-aa11-1f4ee5c7e313">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="887d4ab1-851a-4298-a1b9-59ce29bf3c4b"/>
                 </reportElement>
                 <box padding="5">
@@ -246,10 +267,13 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <textFieldExpression><![CDATA[$F{customer_phone}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="135" y="0" width="35" height="40" uuid="dc3bd3cc-63e6-4e65-83e2-fa6471ce14e1">
+                <reportElement x="135" y="0" width="35" height="30" uuid="dc3bd3cc-63e6-4e65-83e2-fa6471ce14e1">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e63c3a18-9776-409d-acd9-b869ab43d5f7"/>
                 </reportElement>
                 <box padding="5">
@@ -258,10 +282,13 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <textFieldExpression><![CDATA[$F{table_number}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="170" y="0" width="70" height="40" uuid="b12bcbc9-2ed4-4196-92c1-8d14745a5c35">
+                <reportElement x="170" y="0" width="70" height="30" uuid="b12bcbc9-2ed4-4196-92c1-8d14745a5c35">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="67ffa2d7-c8d3-4f9e-8cfd-977a080d57cb"/>
                 </reportElement>
                 <box padding="5">
@@ -270,10 +297,13 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <textFieldExpression><![CDATA[$F{employee_name}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="240" y="0" width="40" height="40" uuid="6739094f-9305-4140-baaa-794a0c169a51">
+                <reportElement x="240" y="0" width="40" height="30" uuid="6739094f-9305-4140-baaa-794a0c169a51">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="30a6910b-46bd-4a15-8678-493924ede0e3"/>
                 </reportElement>
                 <box padding="5">
@@ -282,10 +312,13 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <textFieldExpression><![CDATA[$F{order_id}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="280" y="0" width="65" height="40" uuid="a90927aa-c85d-4403-9d42-f821016641fd">
+                <reportElement x="280" y="0" width="65" height="30" uuid="a90927aa-c85d-4403-9d42-f821016641fd">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="50ba04e1-3240-49d4-adf5-9d417276c0d2"/>
                 </reportElement>
                 <box padding="5">
@@ -294,10 +327,13 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <textFieldExpression><![CDATA[$F{ordered_at}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="345" y="0" width="85" height="40" uuid="0019c4e5-7645-43e1-a036-a90aeb68ee77">
+                <reportElement x="345" y="0" width="85" height="30" uuid="0019c4e5-7645-43e1-a036-a90aeb68ee77">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="dda50035-032e-4aae-9e32-fa9c2a3b7480"/>
                 </reportElement>
                 <box padding="5">
@@ -306,10 +342,13 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <textFieldExpression><![CDATA[$F{menu_name}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="430" y="0" width="50" height="40" uuid="a1712898-4f7b-49b6-86ec-c246ee85ef91">
+                <reportElement x="430" y="0" width="50" height="30" uuid="a1712898-4f7b-49b6-86ec-c246ee85ef91">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8a8b6f0f-4d57-4dc9-a1ba-2b1762ef401c"/>
                 </reportElement>
                 <box padding="5">
@@ -318,10 +357,13 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="480" y="0" width="70" height="40" uuid="36094786-ce4f-45bd-8c4a-691334eaf77c">
+                <reportElement x="480" y="0" width="70" height="30" uuid="36094786-ce4f-45bd-8c4a-691334eaf77c">
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="36094786-ce4f-45bd-8c4a-691334eaf77c"/>
                 </reportElement>
                 <box padding="5">
@@ -330,6 +372,9 @@ WHERE o.id = $P{order_id}]]>
                     <bottomPen lineWidth="1.0"/>
                     <rightPen lineWidth="1.0"/>
                 </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font fontName="TH Sarabun New" pdfFontName="TH Sarabun New" isPdfEmbedded="true" pdfEncoding="Identity-H"/>
+                </textElement>
                 <textFieldExpression><![CDATA[$F{unit_price}.multiply(new java.math.BigDecimal($F{quantity}))]]></textFieldExpression>
             </textField>
         </band>
